@@ -1,5 +1,7 @@
 #include "EditorialDisplay.h"
 
+#include <math.h> // for fabs
+
 extern unsigned int DEFAULT_IMG_WIDTH;
 extern unsigned int DEFAULT_IMG_HEIGHT;
 static const unsigned int HEADLINE_POS_Y = 40;
@@ -140,7 +142,11 @@ void EditorialDisplay::setHighlight(const bool h)
 void EditorialDisplay::moveTo(const float x, const float y)
 {
     #if 1
-    _root->addTween(Actor::TweenPosition(Vector2(x,y)), 300);
+    const float dx = std::fabs(_root->getX() - x);
+    if(dx < 2.0f * DEFAULT_IMG_WIDTH)
+        _root->addTween(Actor::TweenPosition(Vector2(x,y)), 300);
+    else
+        _root->setPosition(x,y);
     #else
     _root->setPosition(x,y);
     #endif

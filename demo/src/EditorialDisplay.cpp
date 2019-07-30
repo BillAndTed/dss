@@ -42,6 +42,12 @@ void EditorialDisplay::inflate()
         self->_inflating = false;
         self->_inflated = true;
     });
+
+    _image->addEventListener(HttpRequestTask::ERROR, [self, _info](Event* event){
+
+        self->_inflating = false;
+        self->_inflated = true;
+    });
 }
 
 void EditorialDisplay::deflate()

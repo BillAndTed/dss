@@ -106,12 +106,14 @@ void Demo::fetchEditorialData()
 
         ox::HttpRequestTask* task = safeCast<ox::HttpRequestTask*>(event->currentTarget.get());
         const std::vector<unsigned char> &response = task->getResponse();
-        printf("Size of response vector: %d\n", static_cast<int>(response.size()));
         std::string resp;
         resp.assign(response.begin(), response.end());
-        printf("Size of response string: %d\n", static_cast<int>(resp.size()));
 
         self->parseEditorialData(resp);
+    });
+
+    task->addEventListener(HttpRequestTask::ERROR, [URL](Event* event){
+        printf("ERROR: unable to fetch url: %s", URL.c_str());
     });
 
     task->run();

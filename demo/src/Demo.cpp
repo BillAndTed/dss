@@ -77,40 +77,9 @@ void Demo::doUpdate(const UpdateState& us)
 
         for(auto g:_parsedEditorialData->_games)
         {
-            #if 0
-            displayNum++;
-            spEditorialDisplay d = new EditorialDisplay(g);
-            d->setPosition(editorialXPos, editoralYPos);
-            _root->addChild(d);
-            _assetQueue.push_back(d);
-            editorialXPos += DEFAULT_IMG_WIDTH;
-            if(displayNum == 4)
-            {
-                d->setHighlight(true);
-            }
-            #endif
             _menu->addDisplay(g);
         }
-
     }
-
-    #if 0
-    // If we have things to fetch in the queue, do so
-    if(_assetQueue.size())
-    {
-        auto asset = _assetQueue.front();
-        if(asset->inflated())
-        {
-            // done. kick off the next one next update
-            _assetQueue.pop_front();
-        }
-        else if(!asset->isInflating())
-        {
-            // kick off fetching new assets
-            asset->inflate();
-        }
-    }
-    #endif
 
     return Actor::doUpdate(us);
 }

@@ -71,7 +71,7 @@ void EditorialDisplay::inflate()
 
     printf("Initiating async fetch of asset %s...\n", _gameInfo->_imgURL.c_str());
 
-    _image->addEventListener(HttpRequestTask::COMPLETE, [self, _info](Event* event){
+    _image->addEventListener(HttpRequestTask::COMPLETE, [ self, _info](Event* event){
 
         printf("Async fetch of asset %s completed...\n", _info->_imgURL.c_str());
 
@@ -83,12 +83,16 @@ void EditorialDisplay::inflate()
         self->setAlpha(0);
         self->addTween(Actor::TweenAlpha(255), 500);
         #endif
+        
+        self->_image->removeAllEventListeners();
     });
 
     _image->addEventListener(HttpRequestTask::ERROR, [self, _info](Event* event){
 
         self->_inflating = false;
         self->_inflated = true;
+        
+        self->_image->removeAllEventListeners();
     });
 
     setHighlight(_highlighted);

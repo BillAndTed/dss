@@ -10,7 +10,16 @@ link_directories(${OXYGINE_LIBRARY_DIRS})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OXYGINE_CXX_FLAGS}")
 
-add_executable(demo ../src/example.cpp ../src/main.cpp ../src/Demo.h ../src/Demo.cpp ../src/example.h )
+add_executable(demo 
+	../src/example.cpp
+	../src/main.cpp
+	../src/Demo.h
+	../src/Demo.cpp
+	../src/example.h
+	../src/EditorialData.h
+	../src/EditorialData.cpp
+	../src/EditorialDisplay.h
+	../src/EditorialDisplay.cpp)
 target_link_libraries(demo ${OXYGINE_CORE_LIBS})
 
 

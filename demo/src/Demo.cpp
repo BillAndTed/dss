@@ -61,14 +61,21 @@ void Demo::doUpdate(const UpdateState& us)
         //const unsigned int numGames = static_cast<unsigned int>(_parsedEditorialData->_games.size());
         unsigned int editorialXPos = 0;
         const unsigned int editoralYPos = FEED_BORDER;
+        int displayNum = 0;
         for(auto g:_parsedEditorialData->_games)
         {
+            displayNum++;
             spEditorialDisplay d = new EditorialDisplay(g);
             d->setPosition(editorialXPos, editoralYPos);
             _root->addChild(d);
             _assetQueue.push_back(d);
             editorialXPos += DEFAULT_IMG_WIDTH;
+            if(displayNum == 4)
+            {
+                d->setHighlight(true);
+            }
         }
+
     }
 
     // If we have things to fetch in the queue, do so

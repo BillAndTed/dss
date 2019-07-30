@@ -57,7 +57,7 @@ std::shared_ptr<EditorialData> EditorialData::parse(const Json::Value& root)
             printf("GameNum: %d\n", gameNum);
             std::shared_ptr<GameInfo> g = GameInfo::parse(*game);
             data->_games.push_back(g);
-            #if 0
+            #if 1
             printf("Headline: %s subhead: %s\n", g->_headline.c_str(), g->_subHead.c_str());
             printf("ImgURL: %s, width: %u height: %u\n", g->_imgURL.c_str(), g->_imgWidth, g->_imgHeight);
             #endif

@@ -19,8 +19,11 @@ private:
     std::shared_ptr<GameInfo> _gameInfo;
     bool _inflating = false;
     bool _inflated = false;
+    bool _highlighted = false;
 
     spWebImage _image;
+    spTextField _headline;
+    spTextField _subText;
 
 public:
     EditorialDisplay(std::shared_ptr<GameInfo> gameInfo);
@@ -40,5 +43,11 @@ public:
         Release resources if this is offscreen/not needed
      */
     void deflate();
+
+    /*
+        Are we highlighed?
+     */
+    bool isHighlighted() const {return _highlighted;}
+    void setHighlight(const bool h);
 
 };

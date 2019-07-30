@@ -87,7 +87,7 @@ void EditorialMenu::arrangeDisplays()
     for(int index = start;;)
     {
         auto d = _displays.at(index);
-        d->setPosition(x,y);
+        d->moveTo(x,y);
         d->setHighlight(index == _highlight);
 
         x += DEFAULT_IMG_WIDTH;
@@ -117,7 +117,7 @@ void EditorialMenu::arrangeDisplays()
         else
             break;
 
-        d->setPosition(x,y);
+        d->moveTo(x,y);
         d->setHighlight(false);
 
         --index;

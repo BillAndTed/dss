@@ -95,18 +95,53 @@ void EditorialDisplay::deflate()
 void EditorialDisplay::setHighlight(const bool h)
 {
     _highlighted = h;
+
     if(_highlighted)
     {
+        #if 1
+        if(_root->getScaleX() < 1.5f)
+            _root->addTween(TweenScale(1.5f), 300);
+        #else
         setScale(1.5f, 1.5f);
+        #endif
         setPriority(200);
 
     }else{
+        #if 1
+        if(_root->getScaleX() > 1.0f)
+            _root->addTween(TweenScale(1.0f), 300);
+        #else
         setScale(1.0f, 1.0f);
+        #endif
         setPriority(100);
     }
+    unsigned char startAlpha = _highlighted ? 0 : 255; 
+    unsigned char endAlpha = 255 - startAlpha;
     if(_headline)
+    {
+        #if 1
+        _headline->setAlpha(startAlpha);
+        _headline->addTween(Actor::TweenAlpha(endAlpha), 500);
+        #endif
         _headline->setVisible(_highlighted);
+    }
 
     if(_subText)
+    {
+        #if 1
+        _subText->setAlpha(startAlpha);
+        _subText->addTween(Actor::TweenAlpha(endAlpha), 500);
+        #endif
         _subText->setVisible(_highlighted);
+
+    }
+}
+
+void EditorialDisplay::moveTo(const float x, const float y)
+{
+    #if 1
+    _root->addTween(Actor::TweenPosition(Vector2(x,y)), 300);
+    #else
+    _root->setPosition(x,y);
+    #endif
 }

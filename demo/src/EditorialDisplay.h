@@ -50,4 +50,9 @@ public:
     bool isHighlighted() const {return _highlighted;}
     void setHighlight(const bool h);
 
+    /*
+    helper for position tweens
+     */
+    void moveTo(const float x, const float y);
+
 };

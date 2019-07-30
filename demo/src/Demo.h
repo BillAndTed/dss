@@ -13,5 +13,8 @@ public:
 
     virtual void onAdded2Stage() override;
 
+    void fetchEditorialData();
+    void parseEditorialData(const std::string& data);
+
     void setBackground();
 };

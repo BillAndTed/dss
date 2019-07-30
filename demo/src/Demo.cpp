@@ -44,6 +44,29 @@ void Demo::onAdded2Stage()
     _root->setPriority(100);
     addChild(_root);
 
+    #if 1
+    // setup UI
+    spDemo self = this;
+	ox::core::getDispatcher()->addEventListener(ox::core::EVENT_SYSTEM,[self](Event* ev)
+    {
+        SDL_Event *event = (SDL_Event*)ev->userData;
+
+        if (event->type != SDL_KEYDOWN)
+            return;
+
+        //all key codes could be found in "SDL_keyboard.h" from SDL
+        switch (event->key.keysym.sym)
+        {
+            case SDLK_LEFT:			
+                printf("LEFT KEYDOWN\n");
+            break;
+            case SDLK_RIGHT:			
+                printf("RIGHT KEYDOWN\n");
+            break;
+        }
+    });
+    #endif
+
     // async set background image
     setBackground();
 

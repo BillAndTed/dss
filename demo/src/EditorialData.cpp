@@ -5,13 +5,9 @@ std::shared_ptr<GameInfo> GameInfo::parse(const Json::Value& game)
     std::shared_ptr<GameInfo> gameInfo = std::make_shared<GameInfo>();
 
     // we currently only want content which provides title, subheading and image urls
-    Json::Value content = game["content"];
-    Json::Value editorial = content["editorial"];
-    Json::Value recap = editorial["recap"];
-    Json::Value home = recap["home"];
+    Json::Value home = game["content"]["editorial"]["recap"]["home"];
     Json::Value hl = home["headline"];
     Json::Value subhead = home["subhead"];
-
     Json::Value date = home["date"];
     Json::Value id = home["id"];
 
@@ -20,12 +16,9 @@ std::shared_ptr<GameInfo> GameInfo::parse(const Json::Value& game)
     gameInfo->_date = date.asString();
     gameInfo->_id = id.asString();
 
-    Json::Value photo = home["photo"];
-    Json::Value cuts = photo["cuts"];
     //static const char* defaultSize = "1920x1080";
     static const char* defaultSize = "124x70";
-    
-    Json::Value size = cuts[defaultSize];
+    Json::Value size = home["photo"]["cuts"][defaultSize];
     Json::Value src = size["src"];
     Json::Value w = size["width"];
     Json::Value h = size["height"];
@@ -40,6 +33,7 @@ std::shared_ptr<EditorialData> EditorialData::parse(const Json::Value& root)
 {
     std::shared_ptr<EditorialData> data = std::make_shared<EditorialData>();
     data->_copyright = root["copyright"].asString();
+    
     // verify number of games entries matches the parsed games
     const unsigned int totalGames = root["totalGames"].asUInt();
     data->_games.reserve(totalGames);
@@ -54,10 +48,10 @@ std::shared_ptr<EditorialData> EditorialData::parse(const Json::Value& root)
         for(Json::Value::iterator game = games.begin(); game != games.end(); ++game)
         {
             gameNum++;
-            printf("GameNum: %d\n", gameNum);
+            //printf("GameNum: %d\n", gameNum);
             std::shared_ptr<GameInfo> g = GameInfo::parse(*game);
             data->_games.push_back(g);
-            #if 1
+            #if 0
             printf("Headline: %s subhead: %s\n", g->_headline.c_str(), g->_subHead.c_str());
             printf("ImgURL: %s, width: %u height: %u\n", g->_imgURL.c_str(), g->_imgWidth, g->_imgHeight);
             #endif

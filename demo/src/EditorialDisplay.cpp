@@ -60,9 +60,6 @@ void EditorialDisplay::inflate()
     _subText->setFontSize(16);
 
     _subText->setStyle(style);
-    #if 0
-    printf("--> subtext is: %s\n", _gameInfo->_subHead.c_str());
-    #endif
     _subText->setMultiline(true);
     _subText->setBreakLongWords(true);
     _subText->setText(_gameInfo->_subHead);

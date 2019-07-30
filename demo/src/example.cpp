@@ -21,13 +21,12 @@ void example_init()
     //load xml file with resources definition
     gameResources.loadXML("res.xml");
 
-    //lets create our client code simple actor
-    //spMainActor was defined above as smart intrusive pointer (read more: http://www.boost.org/doc/libs/1_60_0/libs/smart_ptr/intrusive_ptr.html)
-    //spMainActor actor = new Demo;
+    #if 1
     spDemo demo = new Demo;
 
     //and add it to Stage as child
     getStage()->addChild(demo);
+    #endif
 }
 
 

@@ -48,7 +48,7 @@ void EditorialMenu::moveLeft()
     _dirty = true;
     if(_highlight == 0)
     {
-        _highlight = _displays.size() - 1;
+        _highlight = static_cast<unsigned int>(_displays.size() - 1);
     }else{
         _highlight--;
     }
@@ -70,7 +70,7 @@ void EditorialMenu::arrangeDisplays()
     if(!_displays.size())
         return;
 
-    printf("Arranging displays for _highlight: %u\n", _highlight);
+    //printf("Arranging displays for _highlight: %u\n", _highlight);
 
     // simple Layout algorith will go like this:
     // current highlighted menu item is at the center of menu (position(0,0)
@@ -93,7 +93,10 @@ void EditorialMenu::arrangeDisplays()
         x += DEFAULT_IMG_WIDTH;
         onscreen = x < screenWidth;
         if(onscreen)
-            _assetQueue.push_back(d);
+        {
+            if(!d->inflated())
+                _assetQueue.push_back(d);
+        }
         else
             break;
         
@@ -113,7 +116,10 @@ void EditorialMenu::arrangeDisplays()
         auto d = _displays.at(index);
 
         if(onscreen)
-            _assetQueue.push_back(d);
+        {
+            if(!d->inflated())
+                _assetQueue.push_back(d);
+        }
         else
             break;
 

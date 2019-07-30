@@ -5,7 +5,9 @@
 extern unsigned int DEFAULT_IMG_WIDTH;
 extern unsigned int DEFAULT_IMG_HEIGHT;
 static const unsigned int HEADLINE_POS_Y = 40;
+static const unsigned int SUBTEXT_POS_Y = 20;
 static const unsigned int HEADLINE_HEIGHT = 40;
+static const std::string DEFAULT_FONT = "freeSans";
 
 extern Resources gameResources;
 
@@ -41,21 +43,28 @@ void EditorialDisplay::inflate()
     _headline->setPosition(0, 0.0f - HEADLINE_POS_Y);
     _headline->setWidth(DEFAULT_IMG_WIDTH);
     _headline->setHeight(HEADLINE_HEIGHT);
+    _headline->setMultiline(false);
+    _headline->setBreakLongWords(false);
+    _headline->setFontSize(24);
 
-    TextStyle style = TextStyle(gameResources.getResFont("main")).withColor(Color::White).alignMiddle();
+    TextStyle style = TextStyle(gameResources.getResFont(DEFAULT_FONT)).withColor(Color::White).alignMiddle();
     _headline->setStyle(style);
     _headline->setText(_gameInfo->_headline);
     _root->addChild(_headline);
 
     _subText = new TextField();
-    _subText->setPosition(0, DEFAULT_IMG_HEIGHT);
-    _subText->setWidth(DEFAULT_IMG_WIDTH * 2.0);
-    _subText->setHeight(HEADLINE_HEIGHT * 2.0);
+    _subText->setPosition(0, DEFAULT_IMG_HEIGHT + SUBTEXT_POS_Y);
+    _subText->setWidth(DEFAULT_IMG_WIDTH);
+    _subText->setHeight(HEADLINE_HEIGHT);
+    _subText->setVAlign(TextStyle::VALIGN_TOP);
+    _subText->setFontSize(16);
 
     _subText->setStyle(style);
     #if 0
     printf("--> subtext is: %s\n", _gameInfo->_subHead.c_str());
     #endif
+    _subText->setMultiline(true);
+    _subText->setBreakLongWords(true);
     _subText->setText(_gameInfo->_subHead);
     _root->addChild(_subText);
 

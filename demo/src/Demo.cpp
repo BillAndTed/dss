@@ -1,5 +1,4 @@
 #include "Demo.h"
-#include "EditorialDisplay.h"
 
 #include "oxygine/json/json.h"
 
@@ -27,22 +26,15 @@ extern Resources gameResources;
 
 void Demo::onAdded2Stage()
 {
-    #if 1
-    // debugging bg behind images
-    _root = new ColorRectSprite();
-    _root->setColor(Color::Yellow);
-    //_root->setAlpha(0.5);
-    #else
-    _root = new Actor();
-    #endif
-    _root->setY(FEED_LOC_Y);
-    //_root->setX(getStage()->getWidth() / 2.0);
-    _root->setX(0);
-    _root->setHeight( DEFAULT_IMG_HEIGHT + 2 * FEED_BORDER);
-    _root->setWidth(getStage()->getWidth());
-    //_root->setAnchor(0.5, 0.5);
-    _root->setPriority(100);
-    addChild(_root);
+
+    // the actual menu we're implementing
+    _menu = new EditorialMenu();
+    _menu->setY(FEED_LOC_Y);
+    _menu->setX(0);
+    _menu->setHeight( DEFAULT_IMG_HEIGHT + 2 * FEED_BORDER);
+    _menu->setWidth(getStage()->getWidth());
+    _menu->setPriority(100);
+    getStage()->addChild(_menu);
 
     #if 1
     // setup UI
@@ -59,9 +51,11 @@ void Demo::onAdded2Stage()
         {
             case SDLK_LEFT:			
                 printf("LEFT KEYDOWN\n");
+                self->_menu->moveLeft();
             break;
             case SDLK_RIGHT:			
                 printf("RIGHT KEYDOWN\n");
+                self->_menu->moveRight();
             break;
         }
     });
@@ -81,12 +75,9 @@ void Demo::doUpdate(const UpdateState& us)
     {
         doInit = false;
 
-        //const unsigned int numGames = static_cast<unsigned int>(_parsedEditorialData->_games.size());
-        unsigned int editorialXPos = 0;
-        const unsigned int editoralYPos = FEED_BORDER;
-        int displayNum = 0;
         for(auto g:_parsedEditorialData->_games)
         {
+            #if 0
             displayNum++;
             spEditorialDisplay d = new EditorialDisplay(g);
             d->setPosition(editorialXPos, editoralYPos);
@@ -97,10 +88,13 @@ void Demo::doUpdate(const UpdateState& us)
             {
                 d->setHighlight(true);
             }
+            #endif
+            _menu->addDisplay(g);
         }
 
     }
 
+    #if 0
     // If we have things to fetch in the queue, do so
     if(_assetQueue.size())
     {
@@ -116,6 +110,7 @@ void Demo::doUpdate(const UpdateState& us)
             asset->inflate();
         }
     }
+    #endif
 
     return Actor::doUpdate(us);
 }

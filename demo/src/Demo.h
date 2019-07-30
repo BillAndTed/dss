@@ -2,7 +2,7 @@
 
 #include "oxygine-framework.h"
 #include "EditorialData.h"
-#include "EditorialDisplay.h"
+#include "EditorialMenu.h"
 
 #include <deque>
 
@@ -12,18 +12,9 @@ DECLARE_SMART(Demo, spDemo)
 class Demo: public Actor
 {
 private:
-    // colored bg for debugging
-    #if 1
-    spColorRectSprite _root;
-    #else
-    spActor _root;
-    #endif
-
     // pure data cache
     std::shared_ptr<EditorialData> _parsedEditorialData;
-    // gui widgets driven by data
-    //std::list<spEditorialDisplay> _gameDisplays;
-    std::deque<spEditorialDisplay> _assetQueue;
+    spEditorialMenu _menu;
 
 public:
 

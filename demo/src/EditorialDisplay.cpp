@@ -98,9 +98,11 @@ void EditorialDisplay::setHighlight(const bool h)
     if(_highlighted)
     {
         setScale(1.5f, 1.5f);
+        setPriority(200);
 
     }else{
         setScale(1.0f, 1.0f);
+        setPriority(100);
     }
     if(_headline)
         _headline->setVisible(_highlighted);

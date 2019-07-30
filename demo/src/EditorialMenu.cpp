@@ -39,7 +39,7 @@ void EditorialMenu::addDisplay(std::shared_ptr<GameInfo> gameInfo)
     _displays.push_back(d);
     addChild(d);
     // queue the display for async asset fetching
-    _assetQueue.push_back(d);
+    //_assetQueue.push_back(d);
 
     _dirty = true;
 }
@@ -70,16 +70,60 @@ void EditorialMenu::arrangeDisplays()
     if(!_displays.size())
         return;
 
-    unsigned int screenW = getStage()->getWidth();
-    unsigned int numDisplays = static_cast<unsigned int>(_displays.size());
-    unsigned int pos = 0;
-    for(auto d = _displays.begin(); d != _displays.end(); ++d)
+    printf("Arranging displays for _highlight: %u\n", _highlight);
+
+    // simple Layout algorith will go like this:
+    // current highlighted menu item is at the center of menu (position(0,0)
+    // display visible on either side wrap around circularly
+    // Only those displays onscreen will have assets loaded
+    // possibly unload when go off screen (or when resource limits reached)
+
+    float x = 0;
+    float y = 0;
+    float screenWidth = getStage()->getWidth() / 2.0f + DEFAULT_IMG_WIDTH * 2.0f;
+    bool onscreen = true;
+    int start = _highlight;
+    const int numDisplays = static_cast<int>(_displays.size());
+    for(int index = start;;)
     {
-        (*d)->setPosition(pos * DEFAULT_IMG_WIDTH, 0);
-        (*d)->setHighlight(pos == _highlight);        
-        pos++;
+        auto d = _displays.at(index);
+        d->setPosition(x,y);
+        d->setHighlight(index == _highlight);
+
+        x += DEFAULT_IMG_WIDTH;
+        onscreen = x < screenWidth;
+        if(onscreen)
+            _assetQueue.push_back(d);
+        else
+            break;
+        
+        // TODO: we could release assets for widgets offscreen or manage cache?
+
+        ++index;
+        if(index == numDisplays) index = 0;
+        if(index == start) break;
     }
-    
+    int end = _highlight > 0 ? _highlight - 1 : numDisplays -1 ;
+    x = 0;
+    for(int index = end;;)
+    {
+        x -= DEFAULT_IMG_WIDTH;
+        onscreen = x > (-1.0f*screenWidth);
+
+        auto d = _displays.at(index);
+
+        if(onscreen)
+            _assetQueue.push_back(d);
+        else
+            break;
+
+        d->setPosition(x,y);
+        d->setHighlight(false);
+
+        --index;
+        if(index < 0) index = numDisplays - 1;
+        if(index == end) break;
+    }    
 
     _dirty = false;
 }

@@ -28,11 +28,12 @@ void Demo::onAdded2Stage()
 {
 
     // the actual menu we're implementing
+    float screenWidth = getStage()->getWidth();
     _menu = new EditorialMenu();
     _menu->setY(FEED_LOC_Y);
-    _menu->setX(0);
+    _menu->setX(screenWidth/2.0f);
     _menu->setHeight( DEFAULT_IMG_HEIGHT + 2 * FEED_BORDER);
-    _menu->setWidth(getStage()->getWidth());
+    _menu->setWidth(screenWidth);
     _menu->setPriority(100);
     getStage()->addChild(_menu);
 

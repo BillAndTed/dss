@@ -13,8 +13,8 @@ EditorialDisplay::EditorialDisplay(std::shared_ptr<GameInfo> gameInfo)
     _root = new ColorRectSprite();
     _root->setWidth(DEFAULT_IMG_WIDTH);
     _root->setHeight(DEFAULT_IMG_HEIGHT);
-    _root->setColor(Color::Red);
-    _root->setAnchor(0, 0.5);
+    _root->setColor(Color::White);
+    _root->setAnchor(0.5, 0.5);
     addChild(_root);
 }
 

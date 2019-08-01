@@ -14,12 +14,9 @@ extern Resources gameResources;
 EditorialDisplay::EditorialDisplay(std::shared_ptr<GameInfo> gameInfo)
     :_gameInfo(gameInfo)
 {
-    _root = new ColorRectSprite();
-    _root->setWidth(DEFAULT_IMG_WIDTH);
-    _root->setHeight(DEFAULT_IMG_HEIGHT);
-    _root->setColor(Color::White);
-    _root->setAnchor(0.5, 0.5);
-    addChild(_root);
+    setWidth(DEFAULT_IMG_WIDTH);
+    setHeight(DEFAULT_IMG_HEIGHT);
+    setAnchor(0.5, 0.5);
 }
 
 void EditorialDisplay::inflate()
@@ -29,7 +26,7 @@ void EditorialDisplay::inflate()
 
     // async fetch of image off network
     _image = new WebImage;
-    _root->addChild(_image);
+    addChild(_image);
 
     _image->load(_gameInfo->_imgURL);
     
@@ -50,7 +47,7 @@ void EditorialDisplay::inflate()
     TextStyle style = TextStyle(gameResources.getResFont(DEFAULT_FONT)).withColor(Color::White).alignMiddle();
     _headline->setStyle(style);
     _headline->setText(_gameInfo->_headline);
-    _root->addChild(_headline);
+    addChild(_headline);
 
     _subText = new TextField();
     _subText->setPosition(0, DEFAULT_IMG_HEIGHT + SUBTEXT_POS_Y);
@@ -63,7 +60,7 @@ void EditorialDisplay::inflate()
     _subText->setMultiline(true);
     _subText->setBreakLongWords(true);
     _subText->setText(_gameInfo->_subHead);
-    _root->addChild(_subText);
+    addChild(_subText);
 
 
     spEditorialDisplay self = this;
@@ -111,8 +108,8 @@ void EditorialDisplay::setHighlight(const bool h)
     if(_highlighted)
     {
         #if 1
-        if(_root->getScaleX() < 1.5f)
-            _root->addTween(TweenScale(1.5f), 300);
+        if(getScaleX() < 1.5f)
+            addTween(TweenScale(1.5f), 300);
         #else
         setScale(1.5f, 1.5f);
         #endif
@@ -120,8 +117,8 @@ void EditorialDisplay::setHighlight(const bool h)
 
     }else{
         #if 1
-        if(_root->getScaleX() > 1.0f)
-            _root->addTween(TweenScale(1.0f), 300);
+        if(getScaleX() > 1.0f)
+            addTween(TweenScale(1.0f), 300);
         #else
         setScale(1.0f, 1.0f);
         #endif
@@ -152,12 +149,12 @@ void EditorialDisplay::setHighlight(const bool h)
 void EditorialDisplay::moveTo(const float x, const float y)
 {
     #if 1
-    const float dx = std::fabs(_root->getX() - x);
+    const float dx = std::fabs(getX() - x);
     if(dx < 2.0f * DEFAULT_IMG_WIDTH)
-        _root->addTween(Actor::TweenPosition(Vector2(x,y)), 300);
+        addTween(Actor::TweenPosition(Vector2(x,y)), 300);
     else
-        _root->setPosition(x,y);
+        setPosition(x,y);
     #else
-    _root->setPosition(x,y);
+    setPosition(x,y);
     #endif
 }

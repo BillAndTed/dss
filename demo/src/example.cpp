@@ -15,6 +15,11 @@ void example_preinit() {}
 //called from main.cpp
 void example_init()
 {
+    // I'd prefer a compile time solution to turn off logs
+    // but this is currently all the framework supports
+    #ifndef OX_DEBUG
+    logs::disable();
+    #endif
 
     ox::HttpRequestTask::init();
 

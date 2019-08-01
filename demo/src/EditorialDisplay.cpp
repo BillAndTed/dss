@@ -64,13 +64,12 @@ void EditorialDisplay::inflate()
 
 
     spEditorialDisplay self = this;
-    std::shared_ptr<GameInfo> _info = _gameInfo;
 
-    printf("Initiating async fetch of asset %s...\n", _gameInfo->_imgURL.c_str());
+    logs::messageln("Initiating async fetch of asset %s.\n", _gameInfo->_imgURL.c_str());
 
-    _image->addEventListener(HttpRequestTask::COMPLETE, [ self, _info](Event* event){
+    _image->addEventListener(HttpRequestTask::COMPLETE, [self](Event* event){
 
-        printf("Async fetch of asset %s completed...\n", _info->_imgURL.c_str());
+        logs::messageln("Async fetch of asset (%s) COMPLETE.", self->_gameInfo->_imgURL.c_str());
 
         self->_inflating = false;
         self->_inflated = true;
@@ -84,7 +83,7 @@ void EditorialDisplay::inflate()
         self->_image->removeAllEventListeners();
     });
 
-    _image->addEventListener(HttpRequestTask::ERROR, [self, _info](Event* event){
+    _image->addEventListener(HttpRequestTask::ERROR, [self](Event* event){
 
         self->_inflating = false;
         self->_inflated = true;

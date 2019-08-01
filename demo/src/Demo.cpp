@@ -51,11 +51,11 @@ void Demo::onAdded2Stage()
         switch (event->key.keysym.sym)
         {
             case SDLK_LEFT:			
-                printf("LEFT KEYDOWN\n");
+                logs::messageln("LEFT KEYDOWN\n");
                 self->_menu->moveLeft();
             break;
             case SDLK_RIGHT:			
-                printf("RIGHT KEYDOWN\n");
+                logs::messageln("RIGHT KEYDOWN\n");
                 self->_menu->moveRight();
             break;
         }
@@ -95,7 +95,7 @@ void Demo::fetchEditorialData()
     task->setUrl(URL);
     
     // Initiate the http request and handle async response
-    printf("initiating json request...\n");
+    logs::messageln("initiating json request...\n");
     spDemo self = this;
     task->addEventListener(HttpRequestTask::COMPLETE, [self](Event* event){
 
@@ -108,7 +108,7 @@ void Demo::fetchEditorialData()
     });
 
     task->addEventListener(HttpRequestTask::ERROR, [URL](Event* event){
-        printf("ERROR: unable to fetch url: %s", URL.c_str());
+        logs::error("ERROR: unable to fetch url: %s", URL.c_str());
     });
 
     task->run();
@@ -123,7 +123,7 @@ void Demo::parseEditorialData(const std::string& data)
     bool parsingSuccessful = reader.parse( data, root );
     if ( !parsingSuccessful )
     {
-        printf("ERROR parsing json string...\n");
+        logs::error("ERROR parsing json string...\n");
         return;
     }
 
@@ -131,7 +131,7 @@ void Demo::parseEditorialData(const std::string& data)
 
     #if 1
     // commonsense checking of editorial data returned
-    printf("Editorial data copyright: %s\n", _parsedEditorialData->_copyright.c_str());
+    logs::messageln("Editorial data copyright: %s\n", _parsedEditorialData->_copyright.c_str());
     #endif
 }
 

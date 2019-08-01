@@ -1,17 +1,12 @@
 #!/usr/bin/env sh
 set -e
 
-mkdir -p build
-cd build
-
-#generate cmake project in the "build" folder
-cmake ..
-
-#build it
-make
+TARGET=demo
+BUILD=${BUILD:-Debug}
+BUILD_DIR=build/${BUILD}
 
 #move to working data folder with resources
-cd ../../data
+cd ../data
 
 #run executable
-./../proj.cmake/build/demo
+./../proj.cmake/${BUILD_DIR}/${TARGET}

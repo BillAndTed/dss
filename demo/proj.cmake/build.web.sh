@@ -6,7 +6,7 @@ TARGET=${PROJECT}.html
 BUILD=${BUILD:-Debug}
 #VERBOSE="VERBOSE=1"
 
-BUILD_DIR=web
+BUILD_DIR=web-build/${BUILD}
 DATA_DIR=../data
 OXYGINE_ROOT=../../oxygine-framework
 OXYGINE_TOOLS=${OXYGINE_ROOT}/tools
@@ -32,7 +32,7 @@ mkdir -p ${BUILD_DIR}
 cd ${BUILD_DIR}
 
 #generate cmake project in the "build" folder
-${CMAKE} -DCMAKE_BUILD_TYPE=${BUILD} ..
+${CMAKE} -DCMAKE_BUILD_TYPE=${BUILD} ../..
 
 #build it
 ${MAKE} ${VERBOSE}

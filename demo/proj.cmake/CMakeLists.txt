@@ -3,6 +3,9 @@ project (demo)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
+SET(CMAKE_CXX_FLAGS_RELEASE "-O2")
+SET(CMAKE_CXX_FLAGS_DEBUG  "-O0 -g")
+
 add_subdirectory(../../oxygine-framework/ oxygine-framework)
 add_definitions(${OXYGINE_DEFINITIONS})
 include_directories(${OXYGINE_INCLUDE_DIRS})

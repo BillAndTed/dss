@@ -4,7 +4,7 @@ set -e
 BUILD=${BUILD:-Debug}
 
 BUILD_DIR=web-build/${BUILD}
-NAME=demo
+NAME=index
 TARGET=${NAME}.html
 RUN=emrun
 

@@ -27,7 +27,7 @@ mkdir -p ${BUILD_DIR}
 # copy assets loaded at runtime to build dir
 # cp -r ${DATA_DIR}/movies ${BUILD_DIR}
 # cp -r ${DATA_DIR}/sounds ${BUILD_DIR}
-# cp -r web-assets/* ${BUILD_DIR}
+cp -r web-assets/* ${BUILD_DIR}
 
 cd ${BUILD_DIR}
 

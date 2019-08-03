@@ -5,7 +5,7 @@ std::shared_ptr<GameInfo> GameInfo::parse(const Json::Value& game)
     std::shared_ptr<GameInfo> gameInfo = std::make_shared<GameInfo>();
 
     // we currently only want content which provides title, subheading and image urls
-    Json::Value home = game["content"]["editorial"]["recap"]["home"];
+    Json::Value home = game["content"]["editorial"]["recap"]["mlb"];
     Json::Value hl = home["headline"];
     Json::Value subhead = home["subhead"];
     Json::Value date = home["date"];

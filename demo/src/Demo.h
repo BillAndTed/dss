@@ -25,4 +25,7 @@ public:
     void parseEditorialData(const std::string& data);
 
     void setBackground();
+
+private:
+    static std::string generateJsonURL();
 };

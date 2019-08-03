@@ -24,7 +24,9 @@ add_executable(demo
 	../src/EditorialDisplay.h
 	../src/EditorialDisplay.cpp
 	../src/EditorialMenu.h
-	../src/EditorialMenu.cpp)
+	../src/EditorialMenu.cpp
+	../src/EditorialDetailsDisplay.h
+	../src/EditorialDetailsDisplay.cpp )
 target_link_libraries(demo ${OXYGINE_CORE_LIBS})
 
 

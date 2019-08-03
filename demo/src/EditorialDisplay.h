@@ -9,13 +9,6 @@ DECLARE_SMART(EditorialDisplay, spEditorialDisplay)
 class EditorialDisplay: public Actor
 {
 private:
-    // colored bg for debugging
-    #if 1
-    spColorRectSprite _root;
-    #else
-    spActor _root;
-    #endif
-
     std::shared_ptr<GameInfo> _gameInfo;
     bool _inflating = false;
     bool _inflated = false;
@@ -24,6 +17,10 @@ private:
     spWebImage _image;
     spTextField _headline;
     spTextField _subText;
+
+public:
+    std::shared_ptr<GameInfo> getGameInfo() const { return _gameInfo; }
+    spWebImage getImage() const { return _image; };
 
 public:
     EditorialDisplay(std::shared_ptr<GameInfo> gameInfo);

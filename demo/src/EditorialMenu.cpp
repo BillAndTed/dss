@@ -45,6 +45,8 @@ void EditorialMenu::addDisplay(std::shared_ptr<GameInfo> gameInfo)
 }
 void EditorialMenu::moveLeft()
 {
+    if(_showingDetails) return;
+
     _dirty = true;
     if(_highlight == 0)
     {
@@ -56,6 +58,8 @@ void EditorialMenu::moveLeft()
 
 void EditorialMenu::moveRight()
 {
+    if(_showingDetails) return;
+
     _dirty = true;
     if(_highlight == _displays.size() -1)
     {
@@ -132,4 +136,38 @@ void EditorialMenu::arrangeDisplays()
     }    
 
     _dirty = false;
+}
+
+void EditorialMenu::showHideDetails()
+{
+    if(!_displays.size())
+        return;
+
+    spEditorialDisplay d = _displays[_highlight];
+
+    #if 1
+    // if the current highlighted display hasn't fetched its assets, forget about it
+    // TODO: we should better manage this so that detail window can be opened when assets "in flight"
+    if(!_displays[_highlight]->inflated())
+        return;
+    #endif
+
+    // lazy init
+    if(!_details)
+    {
+        _details = new EditorialDetailsDisplay();
+        // Adding element to the stage so it won't pick up anchoring/position of this menu
+        // is this the best decision?
+        getStage()->addChild(_details);
+    }
+
+    if(!_showingDetails)
+    {
+        _details->show(d);
+        _showingDetails = true;
+
+    }else{
+        _details->hide();
+        _showingDetails = false;
+    }
 }

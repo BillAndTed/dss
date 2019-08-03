@@ -18,6 +18,7 @@ struct GameInfo
     unsigned int _imgHeight = 0;
     std::string _date;
     std::string _id;
+    std::string _blurb;
 
     static std::shared_ptr<GameInfo> parse(const Json::Value& game);
 };

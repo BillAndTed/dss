@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/../oxygine-framework/oxygine/src/",
+                "${workspaceFolder}/../SDL/include/",
+                "/usr/include/",
+                "/lib/gcc/x86_64-linux-gnu/8/include/"
+            ],
+            "defines": [],
+            "compilerPath": "/home/on-three/code/emsdk-portable/clang/e1.38.31_64bit/clang",
+            "cStandard": "c11",
+            "cppStandard": "c++11",
+            "intelliSenseMode": "clang-x64"
+        }
+    ],
+    "version": 4
+}

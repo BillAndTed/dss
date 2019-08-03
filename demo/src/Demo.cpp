@@ -3,6 +3,8 @@
 #include "oxygine/json/json.h"
 
 #include <memory> // for shared_ptr
+#include <ctime>
+#include <locale>
 
 static const bool DEBUG_RESOURCES_ONLY = false;
 static const unsigned int FEED_LOC_Y = 200;
@@ -10,16 +12,6 @@ static const unsigned int FEED_BORDER = 20;
 unsigned int DEFAULT_IMG_WIDTH = 124;
 unsigned int DEFAULT_IMG_HEIGHT = 70;
 
-static const std::string DEBUG_JSON_URL="https://jsonplaceholder.typicode.com/todos/1";
-// this will produce a response like:
-/*
-{
-  "userId": 1,
-  "id": 1,
-  "title": "delectus aut autem",
-  "completed": false
-}
-*/
 static const std::string BACKGROUND_URL="http://mlb.mlb.com/mlb/images/devices/ballpark/1920x1080/1.jpg";
 
 extern Resources gameResources;
@@ -58,6 +50,10 @@ void Demo::onAdded2Stage()
                 logs::messageln("RIGHT KEYDOWN\n");
                 self->_menu->moveRight();
             break;
+            case SDLK_RETURN:
+                logs::messageln("RETURN KEYDOWN\n");
+                self->_menu->showHideDetails();
+            break;
         }
     });
     #endif
@@ -87,8 +83,7 @@ void Demo::doUpdate(const UpdateState& us)
 
 void Demo::fetchEditorialData()
 {
-    // TODO: url for today's date or specific date
-    const std::string URL = "http://statsapi.mlb.com/api/v1/schedule\?hydrate=game(content(editorial(recap))),decisions&date=2018-06-10&sportId=1";
+    const std::string URL = Demo::generateJsonURL();
 
     // do an async request for json data
     ox::spHttpRequestTask task = ox::HttpRequestTask::create();
@@ -154,4 +149,29 @@ void Demo::setBackground()
     sp->setX(0);
     sp->setY(0);
     sp->setPriority(-100);
+}
+
+std::string Demo::generateJsonURL()
+{
+    #if 1
+    // Static URL with known behavior for debugging
+    std::string URL = "http://statsapi.mlb.com/api/v1/schedule\?hydrate=game(content(editorial(recap))),decisions&date=2018-06-10&sportId=1";
+    #else
+    std::string URL = "http://statsapi.mlb.com/api/v1/schedule\?hydrate=game(content(editorial(recap))),decisions&sportId=1";
+    
+    // after: https://en.cppreference.com/w/cpp/chrono/c/strftime
+    #if 0
+    // TODO: we may need locale support?
+    std::locale::global(std::locale("ja_JP.utf8"));
+    #endif
+    std::time_t t = std::time(nullptr);
+    // TODO: maybe  std::wcsftime is necessary? Maybe not. URL is only ascii
+    char mbstr[64];
+    // strftime returns characters written or 0 if character buffer exceeded
+    std::strftime(mbstr, sizeof(mbstr), "&date=%Y-%m-%d", std::localtime(&t));
+    URL += mbstr;
+
+    #endif
+
+    return URL;
 }

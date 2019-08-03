@@ -1,4 +1,4 @@
-#include "Demo.h"
+#include "EditorialFeed.h"
 
 #include "oxygine/json/json.h"
 
@@ -16,7 +16,7 @@ static const std::string BACKGROUND_URL="http://mlb.mlb.com/mlb/images/devices/b
 
 extern Resources gameResources;
 
-void Demo::onAdded2Stage()
+void EditorialFeed::onAdded2Stage()
 {
 
     // the actual menu we're implementing
@@ -31,7 +31,7 @@ void Demo::onAdded2Stage()
 
     #if 1
     // setup UI
-    spDemo self = this;
+    spEditorialFeed self = this;
 	ox::core::getDispatcher()->addEventListener(ox::core::EVENT_SYSTEM,[self](Event* ev)
     {
         SDL_Event *event = (SDL_Event*)ev->userData;
@@ -64,7 +64,7 @@ void Demo::onAdded2Stage()
     fetchEditorialData();
 }
 
-void Demo::doUpdate(const UpdateState& us)
+void EditorialFeed::doUpdate(const UpdateState& us)
 {
     // once we have cached editorial data we can start displaying
     static bool doInit = true;
@@ -81,10 +81,10 @@ void Demo::doUpdate(const UpdateState& us)
     return Actor::doUpdate(us);
 }
 
-void Demo::fetchEditorialData()
+void EditorialFeed::fetchEditorialData()
 {
     // TODO: manage what day (i.e. N days ago)
-    const std::string URL = Demo::generateJsonURL(2);
+    const std::string URL = EditorialFeed::generateJsonURL(2);
 
     // do an async request for json data
     ox::spHttpRequestTask task = ox::HttpRequestTask::create();
@@ -92,7 +92,7 @@ void Demo::fetchEditorialData()
     
     // Initiate the http request and handle async response
     logs::messageln("initiating json request...\n");
-    spDemo self = this;
+    spEditorialFeed self = this;
     task->addEventListener(HttpRequestTask::COMPLETE, [self](Event* event){
 
         ox::HttpRequestTask* task = safeCast<ox::HttpRequestTask*>(event->currentTarget.get());
@@ -110,7 +110,7 @@ void Demo::fetchEditorialData()
     task->run();
 }
 
-void Demo::parseEditorialData(const std::string& data)
+void EditorialFeed::parseEditorialData(const std::string& data)
 {
     // TODO: measure the time to parse here as it's probably expensive
 
@@ -134,7 +134,7 @@ void Demo::parseEditorialData(const std::string& data)
 }
 
 
-void Demo::setBackground()
+void EditorialFeed::setBackground()
 {
     // actual async load of bg image
     // TODO: add to scene graph early, but set image late
@@ -154,7 +154,7 @@ void Demo::setBackground()
     sp->setPriority(-100);
 }
 
-std::string Demo::generateJsonURL(const unsigned int daysAgo /* = 0*/)
+std::string EditorialFeed::generateJsonURL(const unsigned int daysAgo /* = 0*/)
 {
     #if 0
     // Static URL with known behavior for debugging

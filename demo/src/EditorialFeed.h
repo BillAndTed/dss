@@ -8,8 +8,8 @@
 
 using namespace oxygine;
 
-DECLARE_SMART(Demo, spDemo)
-class Demo: public Actor
+DECLARE_SMART(EditorialFeed, spEditorialFeed)
+class EditorialFeed: public Actor
 {
 private:
     // pure data cache

@@ -1,7 +1,7 @@
 #include "oxygine-framework.h"
 #include <functional>
 
-#include "Demo.h"
+#include "EditorialFeed.h"
 
 using namespace oxygine;
 
@@ -27,7 +27,7 @@ void example_init()
     gameResources.loadXML("res.xml");
 
     #if 1
-    spDemo demo = new Demo;
+    spEditorialFeed demo = new EditorialFeed();
 
     //and add it to Stage as child
     getStage()->addChild(demo);

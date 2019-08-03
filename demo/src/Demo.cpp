@@ -83,7 +83,8 @@ void Demo::doUpdate(const UpdateState& us)
 
 void Demo::fetchEditorialData()
 {
-    const std::string URL = Demo::generateJsonURL();
+    // TODO: manage what day (i.e. N days ago)
+    const std::string URL = Demo::generateJsonURL(2);
 
     // do an async request for json data
     ox::spHttpRequestTask task = ox::HttpRequestTask::create();
@@ -128,6 +129,8 @@ void Demo::parseEditorialData(const std::string& data)
     // commonsense checking of editorial data returned
     logs::messageln("Editorial data copyright: %s\n", _parsedEditorialData->_copyright.c_str());
     #endif
+
+    root.clear();
 }
 
 
@@ -151,9 +154,9 @@ void Demo::setBackground()
     sp->setPriority(-100);
 }
 
-std::string Demo::generateJsonURL()
+std::string Demo::generateJsonURL(const unsigned int daysAgo /* = 0*/)
 {
-    #if 1
+    #if 0
     // Static URL with known behavior for debugging
     std::string URL = "http://statsapi.mlb.com/api/v1/schedule\?hydrate=game(content(editorial(recap))),decisions&date=2018-06-10&sportId=1";
     #else
@@ -164,7 +167,9 @@ std::string Demo::generateJsonURL()
     // TODO: we may need locale support?
     std::locale::global(std::locale("ja_JP.utf8"));
     #endif
-    std::time_t t = std::time(nullptr);
+    std::time_t now = std::time(nullptr);
+    std::time_t t = now - daysAgo * (24*60*60);
+
     // TODO: maybe  std::wcsftime is necessary? Maybe not. URL is only ascii
     char mbstr[64];
     // strftime returns characters written or 0 if character buffer exceeded

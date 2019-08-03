@@ -1,5 +1,8 @@
 #include "EditorialData.h"
 
+extern unsigned int DEFAULT_IMG_WIDTH;
+extern unsigned int DEFAULT_IMG_HEIGHT;
+
 std::shared_ptr<GameInfo> GameInfo::parse(const Json::Value& game)
 {
     std::shared_ptr<GameInfo> gameInfo = std::make_shared<GameInfo>();
@@ -18,15 +21,49 @@ std::shared_ptr<GameInfo> GameInfo::parse(const Json::Value& game)
     gameInfo->_id = id.asString();
     gameInfo->_blurb = blurb.asString();
 
+    #if 0
     //static const char* defaultSize = "1920x1080";
     static const char* defaultSize = "124x70";
     Json::Value size = mlb["photo"]["cuts"][defaultSize];
-    Json::Value src = size["src"];
-    Json::Value w = size["width"];
-    Json::Value h = size["height"];
-    gameInfo->_imgURL = src.asString();
-    gameInfo->_imgWidth = w.asUInt();
-    gameInfo->_imgHeight = h.asUInt();
+    #else
+    Json::Value cuts = mlb["photo"]["cuts"];
+    Json::Value size;
+    if(cuts.isArray())
+    {
+        int width = 0;
+        int height = 0;
+        Json::Value src;
+        Json::Value w;
+        Json::Value h;
+        Json::Value aspect;
+        for(Json::Value::iterator cut = cuts.begin(); cut != cuts.end(); ++cut)
+        {
+            src = (*cut)["src"];
+            w = (*cut)["width"];
+            h = (*cut)["height"];
+            aspect = (*cut)["aspectRatio"];
+            width = w.asUInt();
+            height = h.asUInt();
+            if(width == DEFAULT_IMG_WIDTH && height == DEFAULT_IMG_HEIGHT)
+            {
+                // Exact match
+                break;
+            }
+        }
+        gameInfo->_imgURL = src.asString();
+        gameInfo->_imgWidth = w.asUInt();
+        gameInfo->_imgHeight = h.asUInt();
+    }else{
+        static const char* defaultSize = "124x70";
+        size = cuts[defaultSize];
+        Json::Value src = size["src"];
+        Json::Value w = size["width"];
+        Json::Value h = size["height"];
+        gameInfo->_imgURL = src.asString();
+        gameInfo->_imgWidth = w.asUInt();
+        gameInfo->_imgHeight = h.asUInt();
+    }
+    #endif
 
     return gameInfo;
 }

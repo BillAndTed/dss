@@ -27,5 +27,5 @@ public:
     void setBackground();
 
 private:
-    static std::string generateJsonURL();
+    static std::string generateJsonURL(const unsigned int daysAgo = 0);
 };

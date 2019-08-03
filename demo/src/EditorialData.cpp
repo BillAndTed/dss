@@ -5,20 +5,22 @@ std::shared_ptr<GameInfo> GameInfo::parse(const Json::Value& game)
     std::shared_ptr<GameInfo> gameInfo = std::make_shared<GameInfo>();
 
     // we currently only want content which provides title, subheading and image urls
-    Json::Value home = game["content"]["editorial"]["recap"]["mlb"];
-    Json::Value hl = home["headline"];
-    Json::Value subhead = home["subhead"];
-    Json::Value date = home["date"];
-    Json::Value id = home["id"];
+    Json::Value mlb = game["content"]["editorial"]["recap"]["mlb"];
+    Json::Value hl = mlb["headline"];
+    Json::Value subhead = mlb["subhead"];
+    Json::Value date = mlb["date"];
+    Json::Value id = mlb["id"];
+    Json::Value blurb = mlb["blurb"];
 
     gameInfo->_headline = hl.asString();
     gameInfo->_subHead = subhead.asString();
     gameInfo->_date = date.asString();
     gameInfo->_id = id.asString();
+    gameInfo->_blurb = blurb.asString();
 
     //static const char* defaultSize = "1920x1080";
     static const char* defaultSize = "124x70";
-    Json::Value size = home["photo"]["cuts"][defaultSize];
+    Json::Value size = mlb["photo"]["cuts"][defaultSize];
     Json::Value src = size["src"];
     Json::Value w = size["width"];
     Json::Value h = size["height"];

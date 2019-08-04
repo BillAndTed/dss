@@ -18,6 +18,7 @@ private:
     std::deque< spEditorialDisplay > _displays;
     unsigned int _highlight = 0;
     bool _dirty = false;
+    bool _cleared = true;
     bool _showingDetails = false;
     spEditorialDetailsDisplay _details;
 

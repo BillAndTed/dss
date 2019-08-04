@@ -11,6 +11,7 @@ Allow us to cache a subsection of editorial data so the Json doesn't have to han
 
 struct GameInfo
 {
+    bool _valid = false;
     std::string _headline;
     std::string _subHead;
     std::string _imgURL;

@@ -46,6 +46,6 @@ public:
     /*
     helper for position tweens
      */
-    void moveTo(const float x, const float y);
+    void moveTo(const float x, const float y, const bool animate = true);
 
 };

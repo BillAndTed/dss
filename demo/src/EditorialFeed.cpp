@@ -122,6 +122,7 @@ void EditorialFeed::fetchEditorialData(const unsigned int daysAgo)
     {
         _daysAgo = daysAgo;
         _dirty = true;
+        return;
     }
 
     const std::string URL = EditorialFeed::generateJsonURL(daysAgo);

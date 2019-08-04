@@ -9,6 +9,11 @@ std::shared_ptr<GameInfo> GameInfo::parse(const Json::Value& game)
 
     // we currently only want content which provides title, subheading and image urls
     Json::Value mlb = game["content"]["editorial"]["recap"]["mlb"];
+    if(mlb.isNull())
+    {
+        // I've seen this data go missing, so bail
+        return gameInfo;
+    }
     Json::Value hl = mlb["headline"];
     Json::Value subhead = mlb["subhead"];
     Json::Value date = mlb["date"];
@@ -65,6 +70,9 @@ std::shared_ptr<GameInfo> GameInfo::parse(const Json::Value& game)
     }
     #endif
 
+    //printf("Gameinfo parse url--> %s\n", gameInfo->_imgURL.c_str());
+
+    gameInfo->_valid = true;
     return gameInfo;
 }
 
@@ -88,7 +96,8 @@ std::shared_ptr<EditorialData> EditorialData::parse(const Json::Value& root)
         {
             gameNum++;
             std::shared_ptr<GameInfo> g = GameInfo::parse(*game);
-            data->_games.push_back(g);
+            if(g->_valid)
+                data->_games.push_back(g);
             #if 0
             printf("Headline: %s subhead: %s\n", g->_headline.c_str(), g->_subHead.c_str());
             printf("ImgURL: %s, width: %u height: %u\n", g->_imgURL.c_str(), g->_imgWidth, g->_imgHeight);

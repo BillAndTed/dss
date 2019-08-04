@@ -1,6 +1,5 @@
 #include "EditorialDisplay.h"
 
-#include <math.h> // for fabs
 #include "ImageCache.h"
 
 extern unsigned int DEFAULT_IMG_WIDTH;
@@ -132,15 +131,10 @@ void EditorialDisplay::setHighlight(const bool h)
     }
 }
 
-void EditorialDisplay::moveTo(const float x, const float y)
+void EditorialDisplay::moveTo(const float x, const float y, const bool animate /* = true */)
 {
-    #if 1
-    const float dx = std::fabs(getX() - x);
-    if(dx < 2.0f * DEFAULT_IMG_WIDTH)
+    if(animate)
         addTween(Actor::TweenPosition(Vector2(x,y)), 300);
     else
         setPosition(x,y);
-    #else
-    setPosition(x,y);
-    #endif
 }

@@ -34,6 +34,7 @@ void EditorialMenu::clear()
     }
     _displays.clear();
     _highlight = 0;
+    _cleared = true;
 }
 
 void EditorialMenu::moveLeft()
@@ -84,7 +85,7 @@ void EditorialMenu::arrangeDisplays()
     for(int index = start;;)
     {
         auto d = _displays.at(index);
-        d->moveTo(x,y);
+        d->moveTo(x, y, !_cleared);
         d->setHighlight(index == _highlight);
 
         x += DEFAULT_IMG_WIDTH;
@@ -118,7 +119,7 @@ void EditorialMenu::arrangeDisplays()
         else
             break;
 
-        d->moveTo(x,y);
+        d->moveTo(x, y, !_cleared);
         d->setHighlight(false);
 
         --index;
@@ -126,6 +127,7 @@ void EditorialMenu::arrangeDisplays()
         if(index == end) break;
     }    
 
+    _cleared = false;
     _dirty = false;
 }
 

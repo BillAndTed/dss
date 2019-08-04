@@ -15,10 +15,18 @@ DECLARE_SMART(EditorialMenu, spEditorialMenu)
 class EditorialMenu: public Actor
 {
 private:
+    enum DIRTY_STATE
+    {
+        CLEAN = 0,
+        CLEAR,
+        MOVE_RIGHT,
+        MOVE_LEFT
+    };
+
     std::deque< spEditorialDisplay > _displays;
     unsigned int _highlight = 0;
-    bool _dirty = false;
-    bool _cleared = true;
+    DIRTY_STATE _dirtyState = CLEAR;
+    // Whether a details window is up
     bool _showingDetails = false;
     spEditorialDetailsDisplay _details;
 

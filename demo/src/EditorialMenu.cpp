@@ -11,7 +11,7 @@ extern unsigned int DEFAULT_IMG_HEIGHT;
 
 void EditorialMenu::doUpdate(const UpdateState& us)
 {
-    if(_dirty)
+    if(_dirtyState != DIRTY_STATE::CLEAN)
         arrangeDisplays();
 
     return Actor::doUpdate(us);
@@ -23,25 +23,33 @@ void EditorialMenu::addDisplay(std::shared_ptr<GameInfo> gameInfo)
     _displays.push_back(d);
     addChild(d);
 
-    _dirty = true;
+    _dirtyState = DIRTY_STATE::CLEAR;
 }
 
 void EditorialMenu::clear()
 {
+    if(_details && _showingDetails)
+    {
+        _details->hide();
+        _showingDetails = false;
+    }
+
     for(auto d:_displays)
     {
         removeChild(d);
     }
     _displays.clear();
     _highlight = 0;
-    _cleared = true;
+
+    _dirtyState = DIRTY_STATE::CLEAR;
 }
 
 void EditorialMenu::moveLeft()
 {
     if(_showingDetails) return;
 
-    _dirty = true;
+    _dirtyState = DIRTY_STATE::MOVE_LEFT;
+
     if(_highlight == 0)
     {
         _highlight = static_cast<unsigned int>(_displays.size() - 1);
@@ -54,7 +62,8 @@ void EditorialMenu::moveRight()
 {
     if(_showingDetails) return;
 
-    _dirty = true;
+    _dirtyState = DIRTY_STATE::MOVE_RIGHT;
+
     if(_highlight == _displays.size() -1)
     {
         _highlight = 0;
@@ -80,55 +89,56 @@ void EditorialMenu::arrangeDisplays()
     float y = 0;
     float screenWidth = getStage()->getWidth() / 2.0f + DEFAULT_IMG_WIDTH * 2.0f;
     bool onscreen = true;
+    // Only animate if we're not setting up first time
+    bool animate = _dirtyState != DIRTY_STATE::CLEAR;
     int start = _highlight;
     const int numDisplays = static_cast<int>(_displays.size());
+    const int numDisplayRight = numDisplays / 2;
+    const int numDisplaysLeft = numDisplays - numDisplayRight;
+    int displayCount = 0;
+
     for(int index = start;;)
     {
         auto d = _displays.at(index);
-        d->moveTo(x, y, !_cleared);
+
+        // adjust edge cases to improve smooth animation
+        if(_dirtyState == DIRTY_STATE::MOVE_LEFT && displayCount == numDisplayRight)
+        {
+            d->setPosition(x - DEFAULT_IMG_WIDTH, y);
+        }
+        if(_dirtyState == DIRTY_STATE::MOVE_RIGHT && displayCount == numDisplayRight - 1)
+        {
+            d->setPosition(x + DEFAULT_IMG_WIDTH, y);
+        }
+
+        d->moveTo(x, y, animate);
         d->setHighlight(index == _highlight);
 
-        x += DEFAULT_IMG_WIDTH;
-        onscreen = x < screenWidth;
+        onscreen = (x >= screenWidth * -1.0f) || x <= screenWidth;
+        
         if(onscreen)
         {
+            // this should be idempotent, so we can
+            // safey call multiple times but the asset
+            // will only be loaded once
             d->inflate();
         }
-        else
-            break;
-        
-        // TODO: we could release assets for widgets offscreen or manage cache?
+
+        x += DEFAULT_IMG_WIDTH;
 
         ++index;
+        ++displayCount;
+
+        if(displayCount == numDisplayRight)
+        {
+            x = -1.0f * numDisplaysLeft * DEFAULT_IMG_WIDTH;
+        }
+
         if(index == numDisplays) index = 0;
         if(index == start) break;
     }
-    int end = _highlight > 0 ? _highlight - 1 : numDisplays -1 ;
-    x = 0;
-    for(int index = end;;)
-    {
-        x -= DEFAULT_IMG_WIDTH;
-        onscreen = x > (-1.0f*screenWidth);
 
-        auto d = _displays.at(index);
-
-        if(onscreen)
-        {
-            d->inflate();
-        }
-        else
-            break;
-
-        d->moveTo(x, y, !_cleared);
-        d->setHighlight(false);
-
-        --index;
-        if(index < 0) index = numDisplays - 1;
-        if(index == end) break;
-    }    
-
-    _cleared = false;
-    _dirty = false;
+    _dirtyState = DIRTY_STATE::CLEAN;
 }
 
 void EditorialMenu::showHideDetails()

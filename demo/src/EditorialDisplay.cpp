@@ -1,6 +1,7 @@
 #include "EditorialDisplay.h"
 
 #include <math.h> // for fabs
+#include "ImageCache.h"
 
 extern unsigned int DEFAULT_IMG_WIDTH;
 extern unsigned int DEFAULT_IMG_HEIGHT;
@@ -20,16 +21,30 @@ EditorialDisplay::EditorialDisplay(std::shared_ptr<GameInfo> gameInfo)
 }
 
 void EditorialDisplay::inflate()
-{
-    _inflating = true;
-    _inflated = false;
+{   
+    if(_inflated)
+        return;
+    /*
+    Get the image from the ImageCache
+    Success or failure determined by async callback
+     */
+    std::string URL = _gameInfo->_imgURL;
+    spEditorialDisplay self = this;
+    _image = ImageCache::get(_gameInfo->_imgURL,
+    [URL, self](spWebImage img){
+        logs::messageln("Async fetch of asset (%s) via cache COMPLETE.", URL.c_str());
+        #if 1
+        // fade in the asset
+        self->setAlpha(0);
+        self->addTween(Actor::TweenAlpha(255), 500);
+        #endif
+    },
+    [URL,self](int error, const std::string& desc){
+        logs::error("Async fetch of URL: %s FAILED.\n", URL.c_str());
 
-    // async fetch of image off network
-    _image = new WebImage;
-    addChild(_image);
-
-    _image->load(_gameInfo->_imgURL);
-    
+        // TODO: Set a standin image if we couldn't get it?
+    });
+    addChild(_image);    
     _image->setTouchEnabled(false);
     _image->setSize(_gameInfo->_imgWidth, _gameInfo->_imgHeight);
     _image->setX(0);
@@ -62,42 +77,14 @@ void EditorialDisplay::inflate()
     _subText->setText(_gameInfo->_subHead);
     addChild(_subText);
 
-
-    spEditorialDisplay self = this;
-
-    logs::messageln("Initiating async fetch of asset %s.\n", _gameInfo->_imgURL.c_str());
-
-    _image->addEventListener(HttpRequestTask::COMPLETE, [self](Event* event){
-
-        logs::messageln("Async fetch of asset (%s) COMPLETE.", self->_gameInfo->_imgURL.c_str());
-
-        self->_inflating = false;
-        self->_inflated = true;
-
-        #if 1
-        // fade in the asset
-        self->setAlpha(0);
-        self->addTween(Actor::TweenAlpha(255), 500);
-        #endif
-        
-        self->_image->removeAllEventListeners();
-    });
-
-    _image->addEventListener(HttpRequestTask::ERROR, [self](Event* event){
-
-        self->_inflating = false;
-        self->_inflated = true;
-        
-        self->_image->removeAllEventListeners();
-    });
-
     setHighlight(_highlighted);
+
+    _inflated = true;
 }
 
 void EditorialDisplay::deflate()
 {
-    _inflating = false;
-    _inflated = false;
+    // TODO: release resources or let cache handle it?
 }
 
 void EditorialDisplay::setHighlight(const bool h)

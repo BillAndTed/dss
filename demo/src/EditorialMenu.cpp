@@ -11,22 +11,6 @@ extern unsigned int DEFAULT_IMG_HEIGHT;
 
 void EditorialMenu::doUpdate(const UpdateState& us)
 {
-    // If we have things to fetch in the queue, do so
-    if(_assetQueue.size())
-    {
-        auto asset = _assetQueue.front();
-        if(asset->inflated())
-        {
-            // done. kick off the next one next update
-            _assetQueue.pop_front();
-        }
-        else if(!asset->isInflating())
-        {
-            // kick off fetching new assets
-            asset->inflate();
-        }
-    }
-
     if(_dirty)
         arrangeDisplays();
 
@@ -49,7 +33,6 @@ void EditorialMenu::clear()
         removeChild(d);
     }
     _displays.clear();
-    _assetQueue.clear();
     _highlight = 0;
 }
 
@@ -108,8 +91,7 @@ void EditorialMenu::arrangeDisplays()
         onscreen = x < screenWidth;
         if(onscreen)
         {
-            if(!d->inflated())
-                _assetQueue.push_back(d);
+            d->inflate();
         }
         else
             break;
@@ -131,8 +113,7 @@ void EditorialMenu::arrangeDisplays()
 
         if(onscreen)
         {
-            if(!d->inflated())
-                _assetQueue.push_back(d);
+            d->inflate();
         }
         else
             break;
@@ -155,7 +136,7 @@ void EditorialMenu::showHideDetails()
 
     spEditorialDisplay d = _displays[_highlight];
 
-    #if 1
+    #if 0
     // if the current highlighted display hasn't fetched its assets, forget about it
     // TODO: we should better manage this so that detail window can be opened when assets "in flight"
     if(!_displays[_highlight]->inflated())

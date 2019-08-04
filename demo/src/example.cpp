@@ -2,6 +2,7 @@
 #include <functional>
 
 #include "EditorialFeed.h"
+#include "ImageCache.h"
 
 using namespace oxygine;
 
@@ -23,6 +24,8 @@ void example_init()
 
     ox::HttpRequestTask::init();
 
+    ImageCache::init();
+
     //load xml file with resources definition
     gameResources.loadXML("res.xml");
 
@@ -38,11 +41,14 @@ void example_init()
 //called each frame from main.cpp
 void example_update()
 {
+    ImageCache::update();
 }
 
 //called each frame from main.cpp
 void example_destroy()
 {
+    ImageCache::release();
+
     ox::HttpRequestTask::release();
 
     //free previously loaded resources

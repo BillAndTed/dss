@@ -16,7 +16,6 @@ class EditorialMenu: public Actor
 {
 private:
     std::deque< spEditorialDisplay > _displays;
-    std::deque< spEditorialDisplay > _assetQueue;
     unsigned int _highlight = 0;
     bool _dirty = false;
     bool _showingDetails = false;

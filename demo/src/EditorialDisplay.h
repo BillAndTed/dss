@@ -10,13 +10,12 @@ class EditorialDisplay: public Actor
 {
 private:
     std::shared_ptr<GameInfo> _gameInfo;
-    bool _inflating = false;
-    bool _inflated = false;
     bool _highlighted = false;
 
     spWebImage _image;
     spTextField _headline;
     spTextField _subText;
+    bool _inflated = false;
 
 public:
     std::shared_ptr<GameInfo> getGameInfo() const { return _gameInfo; }
@@ -24,14 +23,11 @@ public:
 
 public:
     EditorialDisplay(std::shared_ptr<GameInfo> gameInfo);
-
     /*
-        Has this widget fetched it async assets yet?
+    Have we requested assets off the server?
      */
-    bool inflated() const {return _inflated;}
+    bool inflated() const { return _inflated; };
 
-    /* currently fetching assets */
-    bool isInflating() const {return _inflating;}
     /*
         Initiate async fetch of assets
      */

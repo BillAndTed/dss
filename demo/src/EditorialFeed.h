@@ -5,6 +5,7 @@
 #include "EditorialMenu.h"
 
 #include <deque>
+#include <unordered_map>
 
 using namespace oxygine;
 
@@ -13,18 +14,27 @@ class EditorialFeed: public Actor
 {
 private:
     // pure data cache
-    std::shared_ptr<EditorialData> _parsedEditorialData;
+    std::unordered_map< unsigned int, std::shared_ptr<EditorialData> >_parsedEditorialData;
     spEditorialMenu _menu;
-
+    spTextField _instructions;
+    spTextField _date;
+private:
+    // starting display at two days ago because today seems to lack data
+    unsigned int _daysAgo = 2;
+    bool _outstandingJSONRequest = false;
+    bool _dirty = false;
 public:
 
     virtual void onAdded2Stage() override;
     virtual void doUpdate(const UpdateState& us) override;
 
-    void fetchEditorialData();
+    void fetchEditorialData(const unsigned int daysAgo);
     void parseEditorialData(const std::string& data);
 
     void setBackground();
+
+    void showPreviousDay();
+    void showNextDay();
 
 private:
     static std::string generateJsonURL(const unsigned int daysAgo = 0);

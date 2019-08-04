@@ -26,6 +26,7 @@ public:
     virtual void doUpdate(const UpdateState& us) override;
 
     void addDisplay(std::shared_ptr<GameInfo> gameInfo);
+    void clear();
     void moveLeft();
     void moveRight();
     void showHideDetails();

@@ -38,11 +38,21 @@ void EditorialMenu::addDisplay(std::shared_ptr<GameInfo> gameInfo)
     spEditorialDisplay d = new EditorialDisplay(gameInfo);
     _displays.push_back(d);
     addChild(d);
-    // queue the display for async asset fetching
-    //_assetQueue.push_back(d);
 
     _dirty = true;
 }
+
+void EditorialMenu::clear()
+{
+    for(auto d:_displays)
+    {
+        removeChild(d);
+    }
+    _displays.clear();
+    _assetQueue.clear();
+    _highlight = 0;
+}
+
 void EditorialMenu::moveLeft()
 {
     if(_showingDetails) return;

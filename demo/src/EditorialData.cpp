@@ -81,13 +81,12 @@ std::shared_ptr<EditorialData> EditorialData::parse(const Json::Value& root)
     for(Json::Value::iterator date = dates.begin(); date != dates.end(); ++date)
     {
         Json::Value key = date.key();
-        //Json::Value value = (*it);
+        Json::Value day = (*date)["date"];
         Json::Value games = (*date)["games"];
         int gameNum = 0;
         for(Json::Value::iterator game = games.begin(); game != games.end(); ++game)
         {
             gameNum++;
-            //printf("GameNum: %d\n", gameNum);
             std::shared_ptr<GameInfo> g = GameInfo::parse(*game);
             data->_games.push_back(g);
             #if 0
@@ -95,6 +94,7 @@ std::shared_ptr<EditorialData> EditorialData::parse(const Json::Value& root)
             printf("ImgURL: %s, width: %u height: %u\n", g->_imgURL.c_str(), g->_imgWidth, g->_imgHeight);
             #endif
         }
+        data->_date = day.asString();
     }
 
     #if 0

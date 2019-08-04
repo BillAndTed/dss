@@ -26,6 +26,7 @@ struct GameInfo
 struct EditorialData
 {
     std::string _copyright;
+    std::string _date;
     std::vector< std::shared_ptr<GameInfo> > _games;
 
     static std::shared_ptr<EditorialData> parse(const Json::Value& root);

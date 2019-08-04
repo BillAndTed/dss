@@ -6,11 +6,12 @@
 #include <ctime>
 #include <locale>
 
-static const bool DEBUG_RESOURCES_ONLY = false;
 static const unsigned int FEED_LOC_Y = 200;
 static const unsigned int FEED_BORDER = 20;
 unsigned int DEFAULT_IMG_WIDTH = 124;
 unsigned int DEFAULT_IMG_HEIGHT = 70;
+
+static const std::string DEFAULT_FONT = "freeSans";
 
 static const std::string BACKGROUND_URL="http://mlb.mlb.com/mlb/images/devices/ballpark/1920x1080/1.jpg";
 
@@ -18,8 +19,8 @@ extern Resources gameResources;
 
 void EditorialFeed::onAdded2Stage()
 {
+    // General setup and start initialization
 
-    // the actual menu we're implementing
     float screenWidth = getStage()->getWidth();
     _menu = new EditorialMenu();
     _menu->setY(FEED_LOC_Y);
@@ -27,9 +28,8 @@ void EditorialFeed::onAdded2Stage()
     _menu->setHeight( DEFAULT_IMG_HEIGHT + 2 * FEED_BORDER);
     _menu->setWidth(screenWidth);
     _menu->setPriority(100);
-    getStage()->addChild(_menu);
+    addChild(_menu);
 
-    #if 1
     // setup UI
     spEditorialFeed self = this;
 	ox::core::getDispatcher()->addEventListener(ox::core::EVENT_SYSTEM,[self](Event* ev)
@@ -50,41 +50,81 @@ void EditorialFeed::onAdded2Stage()
                 logs::messageln("RIGHT KEYDOWN\n");
                 self->_menu->moveRight();
             break;
+            case SDLK_UP:			
+                logs::messageln("UP KEYDOWN\n");
+                self->showPreviousDay();
+            break;
+            case SDLK_DOWN:			
+                logs::messageln("DOWN KEYDOWN\n");
+                self->showNextDay();
+            break;
             case SDLK_RETURN:
                 logs::messageln("RETURN KEYDOWN\n");
                 self->_menu->showHideDetails();
             break;
         }
     });
-    #endif
 
     // async set background image
     setBackground();
 
-    fetchEditorialData();
+    // async build menu for current day
+    fetchEditorialData(_daysAgo);
+
+    // put some simple instructions at the bottom of the page_instructions;
+    _instructions = new TextField();
+    addChild(_instructions);
+    _instructions->setPosition(0, getStage()->getHeight() - 40);
+    _instructions->setSize(getStage()->getWidth(), 40);
+    _instructions->setText("Use Left/Right arrows to browse Articles. Up/Down arrows for day. Return key for details.");
+    _instructions->setHAlign(TextStyle::HALIGN_MIDDLE);
+    _instructions->setColor(Color::White);
+    _instructions->setFontSize(24);
+    _instructions->setFont(gameResources.getResFont(DEFAULT_FONT));
 }
 
 void EditorialFeed::doUpdate(const UpdateState& us)
 {
-    // once we have cached editorial data we can start displaying
-    static bool doInit = true;
-    if(doInit && _parsedEditorialData)
+    // "dirty" means we have new json data and have to initialize a new Menu display
+    if(_dirty)
     {
-        doInit = false;
+        _menu->clear();
+        auto data = _parsedEditorialData[_daysAgo];
 
-        for(auto g:_parsedEditorialData->_games)
+        if(!_date)
+        {
+            _date = new TextField();
+            addChild(_date);
+            _date->setPosition(0,0);
+            _date->setSize(getStage()->getWidth(), 40);
+            _date->setHAlign(TextStyle::HALIGN_MIDDLE);
+            _date->setColor(Color::White);
+            _date->setFontSize(24);
+            _date->setFont(gameResources.getResFont(DEFAULT_FONT));
+        }
+        _date->setText(data->_date);
+
+
+        for(auto g:data->_games)
         {
             _menu->addDisplay(g);
         }
+        _dirty = false;
     }
 
     return Actor::doUpdate(us);
 }
 
-void EditorialFeed::fetchEditorialData()
+void EditorialFeed::fetchEditorialData(const unsigned int daysAgo)
 {
-    // TODO: manage what day (i.e. N days ago)
-    const std::string URL = EditorialFeed::generateJsonURL(2);
+    // No need to fetch data if we already have it
+    if(_parsedEditorialData.find(daysAgo) != _parsedEditorialData.end())
+    {
+        _daysAgo = daysAgo;
+        _dirty = true;
+    }
+
+    const std::string URL = EditorialFeed::generateJsonURL(daysAgo);
 
     // do an async request for json data
     ox::spHttpRequestTask task = ox::HttpRequestTask::create();
@@ -93,18 +133,20 @@ void EditorialFeed::fetchEditorialData()
     // Initiate the http request and handle async response
     logs::messageln("initiating json request...\n");
     spEditorialFeed self = this;
-    task->addEventListener(HttpRequestTask::COMPLETE, [self](Event* event){
+    task->addEventListener(HttpRequestTask::COMPLETE, [daysAgo, self](Event* event){
 
         ox::HttpRequestTask* task = safeCast<ox::HttpRequestTask*>(event->currentTarget.get());
         const std::vector<unsigned char> &response = task->getResponse();
         std::string resp;
         resp.assign(response.begin(), response.end());
-
+        self->_outstandingJSONRequest = false;
+        self->_daysAgo = daysAgo;
         self->parseEditorialData(resp);
     });
 
-    task->addEventListener(HttpRequestTask::ERROR, [URL](Event* event){
+    task->addEventListener(HttpRequestTask::ERROR, [self, URL](Event* event){
         logs::error("ERROR: unable to fetch url: %s", URL.c_str());
+        self->_outstandingJSONRequest = false;
     });
 
     task->run();
@@ -123,14 +165,11 @@ void EditorialFeed::parseEditorialData(const std::string& data)
         return;
     }
 
-    _parsedEditorialData = EditorialData::parse(root);
+    // This cache currently only grows.
+    // In practice we'd need to reduce it above some size limit
+    _parsedEditorialData[_daysAgo] = EditorialData::parse(root);
+    _dirty = true;
 
-    #if 1
-    // commonsense checking of editorial data returned
-    logs::messageln("Editorial data copyright: %s\n", _parsedEditorialData->_copyright.c_str());
-    #endif
-
-    root.clear();
 }
 
 
@@ -139,10 +178,7 @@ void EditorialFeed::setBackground()
     // actual async load of bg image
     // TODO: add to scene graph early, but set image late
     spWebImage sp = new WebImage;
-    if(DEBUG_RESOURCES_ONLY)
-        sp->load("http://oxygine.org/test/logo.png");
-    else
-        sp->load(BACKGROUND_URL);
+    sp->load(BACKGROUND_URL);
     
     sp->setTouchEnabled(false);
     sp->attachTo(getStage());
@@ -180,3 +216,17 @@ std::string EditorialFeed::generateJsonURL(const unsigned int daysAgo /* = 0*/)
 
     return URL;
 }
+
+    void EditorialFeed::showPreviousDay()
+    {
+        if(_outstandingJSONRequest) return;
+
+        fetchEditorialData(_daysAgo + 1);
+    }
+
+    void EditorialFeed::showNextDay()
+    {
+        if(_outstandingJSONRequest || _daysAgo == 0) return;
+
+        fetchEditorialData(_daysAgo - 1);
+    }

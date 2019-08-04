@@ -28,6 +28,7 @@ public:
     virtual void onAdded2Stage() override;
     virtual void doUpdate(const UpdateState& us) override;
 
+private:
     void fetchEditorialData(const unsigned int daysAgo);
     void parseEditorialData(const std::string& data);
 

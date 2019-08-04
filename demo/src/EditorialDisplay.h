@@ -24,22 +24,12 @@ public:
 public:
     EditorialDisplay(std::shared_ptr<GameInfo> gameInfo);
     /*
-    Have we requested assets off the server?
+    Have we requested/gotten assets off the server?
      */
     bool inflated() const { return _inflated; };
-
-    /*
-        Initiate async fetch of assets
-     */
     void inflate();
-    /*
-        Release resources if this is offscreen/not needed
-     */
     void deflate();
 
-    /*
-        Are we highlighed?
-     */
     bool isHighlighted() const {return _highlighted;}
     void setHighlight(const bool h);
 

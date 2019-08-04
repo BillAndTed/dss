@@ -11,6 +11,8 @@ using namespace oxygine;
 #include <functional>
 #include <unordered_set>
 #include <deque>
+#include <list>
+#include <ctime>
 
 struct CachedImage
 {
@@ -19,6 +21,7 @@ struct CachedImage
     bool _fetching = false;
     bool _fetched = false;
     bool _error = false;
+    std::time_t _lastAccess;
     std::function<void(spWebImage)> _onSuccess = nullptr;
     std::function<void(int,const std::string&)> _onError = nullptr;
 
@@ -28,7 +31,9 @@ struct CachedImage
     :_URL(URL)
     ,_image(image)
     ,_onSuccess(onSuccess)
-    ,_onError(onError){};
+    ,_onError(onError)
+    ,_lastAccess(std::time(nullptr))
+    {};
 
     void LoadAsync();
 
@@ -45,6 +50,9 @@ public:
     static void update();
     static void release();
 
+private:
+    static void updateCache();
+
 public:
     static spWebImage get(const std::string& URL,
         std::function<void(spWebImage)> onSuccess,
@@ -53,4 +61,5 @@ private:
     friend class CachedImage;
     static std::unordered_map<std::string, std::shared_ptr<CachedImage> > _lookup;
     static std::deque<std::shared_ptr<CachedImage>> _loadQueue;
+    static std::list<std::shared_ptr<CachedImage>> _cache;
 };

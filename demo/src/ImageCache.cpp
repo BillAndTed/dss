@@ -5,6 +5,7 @@
 
 std::unordered_map<std::string, std::shared_ptr<CachedImage> > ImageCache::_lookup;
 std::deque<std::shared_ptr<CachedImage>> ImageCache::_loadQueue;
+std::list<std::shared_ptr<CachedImage>> ImageCache::_cache;
 
 void CachedImage::LoadAsync()
 {
@@ -68,6 +69,25 @@ void ImageCache::release()
     }
     ImageCache::_loadQueue.clear();
     ImageCache::_lookup.clear();
+    ImageCache::_cache.clear();
+}
+
+void ImageCache::updateCache()
+{
+    ImageCache::_cache.sort([](const std::shared_ptr< CachedImage > & a, const std::shared_ptr< CachedImage > & b)->bool
+    {
+        return a->_lastAccess < b->_lastAccess;
+    });
+    
+    // would probably be better to limit cache size on available memory or other
+    // but this is good enough for now
+    const static size_t MAX_NUM_IMAGES = 128;
+    while(ImageCache::_cache.size() > MAX_NUM_IMAGES)
+    {
+        std::shared_ptr<CachedImage> img = ImageCache::_cache.back();
+        ImageCache::_lookup.erase(img->_URL);
+        ImageCache::_cache.pop_back();
+    }
 }
 
 spWebImage ImageCache::get(const std::string& URL,
@@ -77,6 +97,10 @@ spWebImage ImageCache::get(const std::string& URL,
     auto img = ImageCache::_lookup.find(URL);
     if(img != ImageCache::_lookup.end())
     {
+        // Update the access time for this asset, and sort, most recent accessed to last
+        img->second->_lastAccess = std::time(nullptr);
+        ImageCache::updateCache();
+
         logs::messageln("Providing cached image at URL:%s\n", URL.c_str());
         // we have the asset in cache. Invoke success callback immediately
         img->second->_fetched = true;
@@ -89,6 +113,9 @@ spWebImage ImageCache::get(const std::string& URL,
     ImageCache::_lookup[URL] = cachedImage;
     // queue the asset for async load
     ImageCache::_loadQueue.push_back(cachedImage);
+    ImageCache::_cache.push_back(cachedImage);
+
+    updateCache();
 
     return newImg;
 }

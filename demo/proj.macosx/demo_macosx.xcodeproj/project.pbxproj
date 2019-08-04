@@ -18,9 +18,11 @@
 		1E839D002B2BA83FC83A695A /* images in Resources */ = {isa = PBXBuildFile; fileRef = 04FE4D4FB640E0DF92DFB865 /* images */; };
 		2DC477AC10D6C07B3FE008F6 /* example.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 360377333740D8A2FD15BBE6 /* example.cpp */; };
 		3A631A475DE035FC53ADE5EA /* res.xml in Resources */ = {isa = PBXBuildFile; fileRef = 7F3B12E3C9D554D9FE28101D /* res.xml */; };
+		68C6DBB822F6A80B0007ACD8 /* EditorialFeed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68C6DBAF22F6A80B0007ACD8 /* EditorialFeed.cpp */; };
+		68C6DBB922F6A80B0007ACD8 /* EditorialDetailsDisplay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68C6DBB322F6A80B0007ACD8 /* EditorialDetailsDisplay.cpp */; };
+		68C6DBBA22F6A80B0007ACD8 /* ImageCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68C6DBB722F6A80B0007ACD8 /* ImageCache.cpp */; };
 		68C6EC2022F056BA00441C59 /* EditorialDisplay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68C6EC1922F056BA00441C59 /* EditorialDisplay.cpp */; };
 		68C6EC2122F056BA00441C59 /* EditorialData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68C6EC1A22F056BA00441C59 /* EditorialData.cpp */; };
-		68C6EC2222F056BA00441C59 /* Demo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68C6EC1E22F056BA00441C59 /* Demo.cpp */; };
 		68C6EC2322F056BA00441C59 /* EditorialMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 68C6EC1F22F056BA00441C59 /* EditorialMenu.cpp */; };
 		68DFE1DE22F0B33A00DD7043 /* SDL2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04A57D861872012D0068B1E5 /* SDL2.framework */; };
 		68DFE1DF22F0B33A00DD7043 /* SDL2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04A57D861872012D0068B1E5 /* SDL2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -122,13 +124,17 @@
 		0BF9628FC8D38F9748F0CDEB /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../src/main.cpp; sourceTree = "<group>"; };
 		360377333740D8A2FD15BBE6 /* example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = example.cpp; path = ../src/example.cpp; sourceTree = "<group>"; };
 		4DA100C319512824B7570663 /* fonts */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = folder; name = fonts; path = ../data/fonts; sourceTree = "<group>"; };
-		68C6EC1522F056BA00441C59 /* Demo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Demo.h; path = ../src/Demo.h; sourceTree = "<group>"; };
+		68C6DBAF22F6A80B0007ACD8 /* EditorialFeed.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EditorialFeed.cpp; path = ../src/EditorialFeed.cpp; sourceTree = "<group>"; };
+		68C6DBB322F6A80B0007ACD8 /* EditorialDetailsDisplay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EditorialDetailsDisplay.cpp; path = ../src/EditorialDetailsDisplay.cpp; sourceTree = "<group>"; };
+		68C6DBB422F6A80B0007ACD8 /* EditorialFeed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EditorialFeed.h; path = ../src/EditorialFeed.h; sourceTree = "<group>"; };
+		68C6DBB522F6A80B0007ACD8 /* ImageCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageCache.h; path = ../src/ImageCache.h; sourceTree = "<group>"; };
+		68C6DBB622F6A80B0007ACD8 /* EditorialDetailsDisplay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EditorialDetailsDisplay.h; path = ../src/EditorialDetailsDisplay.h; sourceTree = "<group>"; };
+		68C6DBB722F6A80B0007ACD8 /* ImageCache.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageCache.cpp; path = ../src/ImageCache.cpp; sourceTree = "<group>"; };
 		68C6EC1922F056BA00441C59 /* EditorialDisplay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EditorialDisplay.cpp; path = ../src/EditorialDisplay.cpp; sourceTree = "<group>"; };
 		68C6EC1A22F056BA00441C59 /* EditorialData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EditorialData.cpp; path = ../src/EditorialData.cpp; sourceTree = "<group>"; };
 		68C6EC1B22F056BA00441C59 /* EditorialMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EditorialMenu.h; path = ../src/EditorialMenu.h; sourceTree = "<group>"; };
 		68C6EC1C22F056BA00441C59 /* EditorialDisplay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EditorialDisplay.h; path = ../src/EditorialDisplay.h; sourceTree = "<group>"; };
 		68C6EC1D22F056BA00441C59 /* EditorialData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EditorialData.h; path = ../src/EditorialData.h; sourceTree = "<group>"; };
-		68C6EC1E22F056BA00441C59 /* Demo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Demo.cpp; path = ../src/Demo.cpp; sourceTree = "<group>"; };
 		68C6EC1F22F056BA00441C59 /* EditorialMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = EditorialMenu.cpp; path = ../src/EditorialMenu.cpp; sourceTree = "<group>"; };
 		7F3B12E3C9D554D9FE28101D /* res.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wtf; name = res.xml; path = ../data/res.xml; sourceTree = "<group>"; };
 		F6123B1E6FE4471A00F49751 /* example.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = example.h; path = ../src/example.h; sourceTree = "<group>"; };
@@ -222,8 +228,12 @@
 		04A57D391871FF8B0068B1E5 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				68C6EC1E22F056BA00441C59 /* Demo.cpp */,
-				68C6EC1522F056BA00441C59 /* Demo.h */,
+				68C6DBB322F6A80B0007ACD8 /* EditorialDetailsDisplay.cpp */,
+				68C6DBB622F6A80B0007ACD8 /* EditorialDetailsDisplay.h */,
+				68C6DBAF22F6A80B0007ACD8 /* EditorialFeed.cpp */,
+				68C6DBB422F6A80B0007ACD8 /* EditorialFeed.h */,
+				68C6DBB722F6A80B0007ACD8 /* ImageCache.cpp */,
+				68C6DBB522F6A80B0007ACD8 /* ImageCache.h */,
 				68C6EC1A22F056BA00441C59 /* EditorialData.cpp */,
 				68C6EC1D22F056BA00441C59 /* EditorialData.h */,
 				68C6EC1922F056BA00441C59 /* EditorialDisplay.cpp */,
@@ -371,8 +381,10 @@
 				68C6EC2122F056BA00441C59 /* EditorialData.cpp in Sources */,
 				68C6EC2322F056BA00441C59 /* EditorialMenu.cpp in Sources */,
 				68C6EC2022F056BA00441C59 /* EditorialDisplay.cpp in Sources */,
+				68C6DBB822F6A80B0007ACD8 /* EditorialFeed.cpp in Sources */,
+				68C6DBBA22F6A80B0007ACD8 /* ImageCache.cpp in Sources */,
+				68C6DBB922F6A80B0007ACD8 /* EditorialDetailsDisplay.cpp in Sources */,
 				DA49ED8903C628BA578C8670 /* main.cpp in Sources */,
-				68C6EC2222F056BA00441C59 /* Demo.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

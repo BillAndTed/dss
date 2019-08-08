@@ -66,7 +66,7 @@ void run()
     Point size = core::getDisplaySize();
     getStage()->setSize(size);
 
-    #if 0
+    #if defined(OX_DEBUG)
     // DebugActor is a helper actor node. It shows FPS, memory usage and other useful stuff
     DebugActor::show();
     #endif

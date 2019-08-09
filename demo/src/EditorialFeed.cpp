@@ -138,11 +138,9 @@ void EditorialFeed::fetchEditorialData(const unsigned int daysAgo)
 
         ox::HttpRequestTask* task = safeCast<ox::HttpRequestTask*>(event->currentTarget.get());
         const std::vector<unsigned char> &response = task->getResponse();
-        std::string resp;
-        resp.assign(response.begin(), response.end());
         self->_outstandingJSONRequest = false;
         self->_daysAgo = daysAgo;
-        self->parseEditorialData(resp);
+        self->parseEditorialData(response);
     });
 
     task->addEventListener(HttpRequestTask::ERROR, [self, URL](Event* event){
@@ -153,16 +151,19 @@ void EditorialFeed::fetchEditorialData(const unsigned int daysAgo)
     task->run();
 }
 
-void EditorialFeed::parseEditorialData(const std::string& data)
+void EditorialFeed::parseEditorialData(const std::vector<unsigned char>& data)
 {
     // TODO: measure the time to parse here as it's probably expensive
 
     Json::Value root;
     Json::Reader reader;
-    bool parsingSuccessful = reader.parse( data, root );
+    size_t sz = data.size();
+    const char* start = reinterpret_cast<const char*>(&(data[0]));
+    const char* end = reinterpret_cast<const char*>(&(data[sz]));
+    bool parsingSuccessful = reader.parse(start, end, root, false);
     if ( !parsingSuccessful )
     {
-        logs::error("ERROR parsing json string...\n");
+        logs::error("ERROR parsing json string: %s\n", reader.getFormatedErrorMessages().c_str());
         return;
     }
 

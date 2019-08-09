@@ -8,18 +8,11 @@ BUILD_DIR=build/${BUILD}
 
 #tools
 VALGRIND=valgrind
-VALGRIND_OPTIONS="--tool=memcheck"
-
-# For full verbose leak checks run with option:
-VALGRIND_OPTIONS="${VALGRIND_OPTIONS} --leak-check=full"
-
-# To run with valgrind false positives turned off (usually X11 related on linux)
-# run with option:
-VALGRIND_OPTIONS="${VALGRIND_OPTIONS} --suppressions=${SCRIPTPATH}/linux/valgrind.suppressions"
-
-# To generate a suppression file (which can quieten valgrind false positives)
-# run with option:
-#VALGRIND_OPTIONS="${VALGRIND_OPTIONS} --gen-suppressions=all"
+MASSIF_OUTPUT=${SCRIPTPATH}/linux/massif.out
+MASSIF_VISUALIZER=massif-visualizer
+VALGRIND_OPTIONS="--tool=massif"
+#VALGRIND_OPTIONS="${VALGRIND_OPTIONS} --pages-as-heap=yes"
+VALGRIND_OPTIONS="${VALGRIND_OPTIONS} --massif-out-file=${MASSIF_OUTPUT}"
 
 echo "Running with valgrind options: ${VALGRIND_OPTIONS}"
 
@@ -31,3 +24,7 @@ cd ../data
 
 #run executable
 ${VALGRIND} ${VALGRIND_OPTIONS} ./../proj.cmake/${BUILD_DIR}/${TARGET}
+
+
+which ${MASSIF_VISUALIZER} || echo "Could not find ${MASSIF_VISUALIZER} on this system. Is it installed?"
+${MASSIF_VISUALIZER} ${MASSIF_OUTPUT}

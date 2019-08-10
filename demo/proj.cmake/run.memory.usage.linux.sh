@@ -13,6 +13,7 @@ MASSIF_VISUALIZER=massif-visualizer
 VALGRIND_OPTIONS="--tool=massif"
 #VALGRIND_OPTIONS="${VALGRIND_OPTIONS} --pages-as-heap=yes"
 VALGRIND_OPTIONS="${VALGRIND_OPTIONS} --massif-out-file=${MASSIF_OUTPUT}"
+VALGRIND_OPTIONS="${VALGRIND_OPTIONS} --keep-debuginfo=yes"
 
 echo "Running with valgrind options: ${VALGRIND_OPTIONS}"
 

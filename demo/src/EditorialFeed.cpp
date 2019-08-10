@@ -11,9 +11,9 @@ static const unsigned int FEED_BORDER = 20;
 unsigned int DEFAULT_IMG_WIDTH = 124;
 unsigned int DEFAULT_IMG_HEIGHT = 70;
 
-static const std::string DEFAULT_FONT = "freeSans";
+#define USE_COMPILE_TIME_BG
 
-static const std::string BACKGROUND_URL="http://mlb.mlb.com/mlb/images/devices/ballpark/1920x1080/1.jpg";
+static const std::string DEFAULT_FONT = "freeSans";
 
 extern Resources gameResources;
 
@@ -177,10 +177,21 @@ void EditorialFeed::parseEditorialData(const std::vector<unsigned char>& data)
 
 void EditorialFeed::setBackground()
 {
-    // actual async load of bg image
-    // TODO: add to scene graph early, but set image late
+    #if defined(USE_COMPILE_TIME_BG)
+    // Use a pre-packaged background image so it can be hardware compressed.
+    spSprite sp = new Sprite();
+    sp->setResAnim(gameResources.getResAnim("bg"));
+    #else
+    static const std::string BACKGROUND_URL="http://mlb.mlb.com/mlb/images/devices/ballpark/1920x1080/1.jpg";
+    // Background is currently held as R8G8B8A8
+    // As it's 1920x1080 background image goes from 1.6M compressed
+    // to (1920x1080x4 bytes) 8.3MB!!!
+    // TODO: resize the image to our current screen (i.e. if the screen is smaller)?
+    // TODO: Use a more compact Image format?
+    // TODO: Use a HW compressed texture?
     spWebImage sp = new WebImage;
     sp->load(BACKGROUND_URL);
+    #endif
     
     sp->setTouchEnabled(false);
     sp->attachTo(getStage());

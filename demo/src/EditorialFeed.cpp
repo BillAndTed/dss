@@ -11,7 +11,7 @@ static const unsigned int FEED_BORDER = 20;
 unsigned int DEFAULT_IMG_WIDTH = 124;
 unsigned int DEFAULT_IMG_HEIGHT = 70;
 
-#define USE_COMPILE_TIME_BG
+//#define USE_COMPILE_TIME_BG
 
 static const std::string DEFAULT_FONT = "freeSans";
 

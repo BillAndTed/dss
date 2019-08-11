@@ -15,6 +15,11 @@ set -e
 # instead source the script ${EMSDK_INSTALL_DIR}/emsdk-portable/emsdk_env.sh in your
 # .bashrc or .bash_profile or similar.
 
+# OSX: You're going to need a recent version of python
+# (higher than 2.7.12, but I can only vouch for 2.7.16).
+# Make sure the python and python2 in your path are correct.
+# Also run the 'Install Certificates.command' in /Application/python2.7 as well. Yes I know it's a pain.
+
 WGET=wget
 EMSDK_INSTALL_DIR=${EMSDK_INSTALL_DIR:-${HOME}/emscripten}
 EMSDK_PORTABLE=emsdk-portable.tar.gz

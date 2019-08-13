@@ -163,7 +163,7 @@ void EditorialFeed::parseEditorialData(const std::vector<unsigned char>& data)
     bool parsingSuccessful = reader.parse(start, end, root, false);
     if ( !parsingSuccessful )
     {
-        logs::error("ERROR parsing json string: %s\n", reader.getFormatedErrorMessages().c_str());
+        logs::error("ERROR parsing json string: %s\n", reader.getFormattedErrorMessages().c_str());
         return;
     }
 

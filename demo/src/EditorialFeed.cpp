@@ -11,9 +11,9 @@ static const unsigned int FEED_BORDER = 20;
 unsigned int DEFAULT_IMG_WIDTH = 124;
 unsigned int DEFAULT_IMG_HEIGHT = 70;
 
-static const std::string DEFAULT_FONT = "freeSans";
+#define USE_COMPILE_TIME_BG
 
-static const std::string BACKGROUND_URL="http://mlb.mlb.com/mlb/images/devices/ballpark/1920x1080/1.jpg";
+static const std::string DEFAULT_FONT = "freeSans";
 
 extern Resources gameResources;
 
@@ -138,11 +138,9 @@ void EditorialFeed::fetchEditorialData(const unsigned int daysAgo)
 
         ox::HttpRequestTask* task = safeCast<ox::HttpRequestTask*>(event->currentTarget.get());
         const std::vector<unsigned char> &response = task->getResponse();
-        std::string resp;
-        resp.assign(response.begin(), response.end());
         self->_outstandingJSONRequest = false;
         self->_daysAgo = daysAgo;
-        self->parseEditorialData(resp);
+        self->parseEditorialData(response);
     });
 
     task->addEventListener(HttpRequestTask::ERROR, [self, URL](Event* event){
@@ -153,16 +151,19 @@ void EditorialFeed::fetchEditorialData(const unsigned int daysAgo)
     task->run();
 }
 
-void EditorialFeed::parseEditorialData(const std::string& data)
+void EditorialFeed::parseEditorialData(const std::vector<unsigned char>& data)
 {
     // TODO: measure the time to parse here as it's probably expensive
 
     Json::Value root;
     Json::Reader reader;
-    bool parsingSuccessful = reader.parse( data, root );
+    size_t sz = data.size();
+    const char* start = reinterpret_cast<const char*>(&(data[0]));
+    const char* end = reinterpret_cast<const char*>(&(data[sz]));
+    bool parsingSuccessful = reader.parse(start, end, root, false);
     if ( !parsingSuccessful )
     {
-        logs::error("ERROR parsing json string...\n");
+        logs::error("ERROR parsing json string: %s\n", reader.getFormattedErrorMessages().c_str());
         return;
     }
 
@@ -176,10 +177,21 @@ void EditorialFeed::parseEditorialData(const std::string& data)
 
 void EditorialFeed::setBackground()
 {
-    // actual async load of bg image
-    // TODO: add to scene graph early, but set image late
+    #if defined(USE_COMPILE_TIME_BG)
+    // Use a pre-packaged background image so it can be hardware compressed.
+    spSprite sp = new Sprite();
+    sp->setResAnim(gameResources.getResAnim("bg"));
+    #else
+    static const std::string BACKGROUND_URL="http://mlb.mlb.com/mlb/images/devices/ballpark/1920x1080/1.jpg";
+    // Background is currently held as R8G8B8A8
+    // As it's 1920x1080 background image goes from 1.6M compressed
+    // to (1920x1080x4 bytes) 8.3MB!!!
+    // TODO: resize the image to our current screen (i.e. if the screen is smaller)?
+    // TODO: Use a more compact Image format?
+    // TODO: Use a HW compressed texture?
     spWebImage sp = new WebImage;
     sp->load(BACKGROUND_URL);
+    #endif
     
     sp->setTouchEnabled(false);
     sp->attachTo(getStage());

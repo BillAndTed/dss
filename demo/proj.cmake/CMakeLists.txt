@@ -4,7 +4,8 @@ project (demo)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 SET(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
-SET(CMAKE_CXX_FLAGS_DEBUG  "-O0 -g -DDEBUG -DOX_DEBUG")
+SET(CMAKE_CXX_FLAGS_DEBUG  "-O0 -g -DDEBUG -DOX_DEBUG -DOXYGINE_DEBUG_TRACE_LEAKS")
+
 
 add_subdirectory(../../oxygine-framework/ oxygine-framework)
 add_definitions(${OXYGINE_DEFINITIONS})

@@ -6,6 +6,7 @@
 
 #include <deque>
 #include <unordered_map>
+#include <vector>
 
 using namespace oxygine;
 
@@ -30,7 +31,7 @@ public:
 
 private:
     void fetchEditorialData(const unsigned int daysAgo);
-    void parseEditorialData(const std::string& data);
+    void parseEditorialData(const std::vector<unsigned char>& data);
 
     void setBackground();
 

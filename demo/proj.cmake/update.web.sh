@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-BUILD=Release
+BUILD=${BUILD:-Debug}
 BUILD_DIR=web-build/${BUILD}
-WEB_DIR=~/public_html/dss-demo
+WEB_DIR=~/public_html/dss-demo/${BUILD}
 
 mkdir -p ${WEB_DIR}
 
